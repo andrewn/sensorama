@@ -1,0 +1,21 @@
+{
+  "name": "radiodan-skeleton",
+  "version": "0.0.0",
+  "description": "An bare-bones Radiodan application",
+  "main": "main.js",
+  "scripts": {
+    "start": "node_modules/.bin/nf start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd ./node_modules/espruino-tools && git submodule add https://github.com/espruino/EspruinoTools.git"
+  },
+  "author": "Andrew Nicolaou <andrew.nicolaou@bbc.co.uk>",
+  "license": "Apache-2",
+  "dependencies": {
+    "radiodan": "git+https://github.com/radiodan/radiodan.js",
+    "radiodan-client": "git+https://github.com/radiodan/radiodan-client.js.git",
+    "foreman": "~1.2.0",
+    "express": "~4.10.7",
+    "node-espruino": "~0.1.5",
+    "es6-promise": "~2.0.1"
+  }
+}
