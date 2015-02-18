@@ -1,7 +1,18 @@
 @import url('./lib/normalize.css');
 @import url('./lib/skeleton.css');
 
-.stop {
-  color: white;
-  background-color: red;
+.measurement {
+  font-size: 3em;
+  padding-top: 0.4em;
+}
+
+.measurement .label {
+  display: inline-block;
+  min-width: 6em;
+}
+
+.measurement .value {
+  display: inline-block;
+  min-width: 3em;
+  text-align: right;
 }

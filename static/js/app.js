@@ -2,26 +2,17 @@ var Ractive = require('ractive');
 
 var socket = io();
 
-var Circle = Ractive.extend({
-  template: '#circle-template',
-  // isolated: true,
-  computed: {
-    radius: function () {
-      return Math.round( ( this.get('value') / 160 ) * 25 );
-    }
-  }
-});
-
 var ractive = new Ractive({
   el: '#ui',
   template: '#ui-template',
   data: {
-    distance: {}
-  },
-  components: {
-    Circle: Circle
+    round: round
   }
 });
+
+function round(vals) {
+  return vals.map ? vals.map(round) : Math.round(vals);
+}
 
 socket.on('sensor', function (msg) {
   console.log('msg', msg);

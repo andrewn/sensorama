@@ -19,16 +19,27 @@
   <div id="ui"></div>
   <script id="ui-template" type="text/ractive">
     {{#distance}}
-      Distance: {{ Math.round(value) }}cm<br/>
-      <Circle />
+    <div class="measurement">
+      <span class="label">Distance</span>
+      <span class="value">{{ Math.round(value) }}{{ unit }}</span>
+    </div>
     {{/distance}}
-  </script>
-  <script id="circle-template" type="text/ractive">
-    <svg viewBox='0 0 100 100'>
-      <g transformx='translate(50,50)'>
-        <circle cx='50' cy='50' r='{{ radius }}'>
-      </g>
-    </svg>
+    {{#accel}}
+    <div class="measurement">
+      <span class="label">Acceleration</span>
+      <span class="value">{{ Math.round(xyz[0]) }}</span>
+      <span class="value">{{ Math.round(xyz[1]) }}</span>
+      <span class="value">{{ Math.round(xyz[2]) }}</span>
+    </div>
+    {{/accel}}
+    {{#gyro}}
+    <div class="measurement">
+      <span class="label">Gyroscope</span>
+      <span class="value">{{ Math.round(xyz[0]) }}</span>
+      <span class="value">{{ Math.round(xyz[1]) }}</span>
+      <span class="value">{{ Math.round(xyz[2]) }}</span>
+    </div>
+    {{/gyro}}
   </script>
   <script src="/js/bundle.js"></script>
 </body><!-- .container -->
