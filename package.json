@@ -18,7 +18,6 @@
     "radiodan-client": "git+https://github.com/radiodan/radiodan-client.js.git",
     "foreman": "~1.2.0",
     "express": "~4.10.7",
-    "node-espruino": "~0.1.5",
     "es6-promise": "~2.0.1",
     "serialport": "~1.5.0",
     "lodash": "~3.2.0",
