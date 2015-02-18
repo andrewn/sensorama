@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/css/app.css">
+
+  <!--
+    Loads the radiodan client library
+    provided by the middleware.
+
+    This exposes a `radiodan` object in
+    javascript that you can use to control
+    the player.
+  -->
+  <!-- <script src="/radiodan/client.js"></script> -->
+  <script src="/socket.io/socket.io.js"></script>
+  <title>Sensors</title>
+</head>
+<body class="container">
+  <div id="ui"></div>
+  <script id="ui-template" type="text/ractive">
+    {{#distance}}
+      Distance: {{ Math.round(value) }}cm<br/>
+      <Circle />
+    {{/distance}}
+  </script>
+  <script id="circle-template" type="text/ractive">
+    <svg viewBox='0 0 100 100'>
+      <g transformx='translate(50,50)'>
+        <circle cx='50' cy='50' r='{{ radius }}'>
+      </g>
+    </svg>
+  </script>
+  <script src="/js/bundle.js"></script>
+</body><!-- .container -->
+</html>
