@@ -37,6 +37,8 @@ function CAP1188(_i2c, _addr) {
 /* Initialize the chip */
 CAP1188.prototype.initialize = function() {
   this.linkLedsToSensors();
+  // "Speed up a bit"
+  this.i2c.writeTo(this.addr, [R.STANDBY_CONFIG, 0x30]);
 };
 
 /* Turn on all LEDs */
