@@ -157,7 +157,7 @@ setInterval(function () {
 var cap = exports.connect(I2C1);
 setInterval(function () {
   emit({ type: 'cap', unit: 'touched', pins: cap.readTouches() });
-}, 500);
+}, 100);
 
 /*
   Blink a light
