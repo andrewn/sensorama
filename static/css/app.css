@@ -15,4 +15,28 @@
   display: inline-block;
   min-width: 3em;
   text-align: right;
+  color: hsl(175, 91%, 50%);
+}
+
+.measurement .touches {
+  display: block;
+}
+
+.measurement .touch {
+  display: inline-block;
+  width: 12.5%;
+  height: 7rem;
+  line-height: 7rem;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  border: 1px solid rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.touches .touch.is-touched {
+  background-color: hsl(175, 91%, 50%);
 }

@@ -40,6 +40,16 @@
       <span class="value">{{ Math.round(xyz[2]) }}</span>
     </div>
     {{/gyro}}
+    {{#cap}}
+    <div class="measurement">
+      <span class="label">Capacitive</span>
+      <div class="touches">
+        {{#pins:i}}
+        <span class="touch {{ (. === true)? 'is-touched' : '' }}">{{i + 1}}</span>
+        {{/pins}}
+      </div>
+    </div>
+    {{/cap}}
   </script>
   <script src="/js/bundle.js"></script>
 </body><!-- .container -->
