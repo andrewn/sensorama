@@ -3,7 +3,11 @@
 
 .measurement {
   font-size: 3em;
-  padding-top: 0.4em;
+  padding: 0.4em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.measurement:last-child {
+  border-bottom: none;
 }
 
 .measurement .label {
