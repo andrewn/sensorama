@@ -37,6 +37,7 @@ function CAP1188(_i2c, _addr) {
 /* Initialize the chip */
 CAP1188.prototype.initialize = function() {
   this.linkLedsToSensors();
+  this.multipleTouches(true);
   // "Speed up a bit"
   this.i2c.writeTo(this.addr, [R.STANDBY_CONFIG, 0x30]);
 };
@@ -52,6 +53,13 @@ CAP1188.prototype.initialize = function() {
 // CAP1188.prototype.led = function(num, enable) {
 //   this.writeBit(R.LED_OUTPUT_CONTROL, num, enable);
 // };
+
+/* How many simultaneous touches to allow */
+CAP1188.prototype.multipleTouches = function(enable) {
+  // 1 will block multiple touches
+  this.writeBit(R.MULTI_TOUCH_CONFIG, 7, enable ? 0 : 1);
+};
+
 
 /* Link the LED to corresponding sensor */
 CAP1188.prototype.linkLedsToSensors = function() {
@@ -125,6 +133,7 @@ exports.connect = function (_i2c,_addr) {
 */
 function emit(msg) {
   USB.println( JSON.stringify(msg) );
+  // schedule another timeout?
 }
 
 /*
@@ -157,7 +166,7 @@ setInterval(function () {
 var cap = exports.connect(I2C1);
 setInterval(function () {
   emit({ type: 'cap', unit: 'touched', pins: cap.readTouches() });
-}, 100);
+}, 500);
 
 /*
   Blink a light
