@@ -128,48 +128,51 @@ exports.connect = function (_i2c,_addr) {
 
 })();
 
-/*
-  Generic helper methods
-*/
+//
+// Generic helper methods
+//
 function emit(msg) {
   USB.println( JSON.stringify(msg) );
   // schedule another timeout?
 }
 
-/*
-  Distance sensor (HC-SR04)
-*/
-// var sensor = require("HC-SR04").connect(A0,A1,function(dist) {
-//   emit({ type: 'distance', value: dist, unit: 'cm' });
-// });
-// setInterval(function() {
-//   sensor.trigger(); // send pulse
-// }, 500);
+//
+// Distance sensor (HC-SR04)
+//
+var sensor = require("HC-SR04").connect(/* trig */ A0, /* echo */ A1, function(dist) {
+  emit({ type: 'distance', value: dist, unit: 'cm' });
+});
 
-/*
-  Digital accelerometer and gyro (MPU6050)
-*/
+// Setup I2C
 I2C1.setup({scl:B6,sda:B7});
+
+//
+// Digital accelerometer and gyro (MPU6050)
+//
 var mpu = require("MPU6050").connect(I2C1);
+
+//
+// Capacitive breakout (CAP1188)
+//
+var cap = exports.connect(I2C1);
+
+var isOn = false;
 setInterval(function () {
+  // Distance sensor
+  sensor.trigger();
+
+  // Capacitive
+  emit({ type: 'cap', unit: 'touched', pins: cap.readTouches() });
+
+  // Gyro
   emit({ type: 'accel', unit: 'raw', xyz : mpu.getAcceleration() });
   emit({ type: 'gyro', unit: 'deg', xyz : mpu.getDegreesPerSecond() });
   //mpu.getAcceleration(); // returns an [x,y,z] array with raw accl. data
   //mpu.getGravity();  // returns acceleration array in G's
   //mpu.getRotation(); // returns an [x,y,z] array with raw gyro data
   //mpu.getDegreesPerSecond(); // returns gyro array in degrees/s
-}, 1000);
 
-/*
-  Capacitive breakout (CAP1188)
-*/
-var cap = exports.connect(I2C1);
-setInterval(function () {
-  emit({ type: 'cap', unit: 'touched', pins: cap.readTouches() });
+  // Blink on-board LED
+  isOn = !isOn; LED3.write(isOn);
 }, 500);
 
-/*
-  Blink a light
-*/
-var isOn = false;
-setInterval(function () { isOn = !isOn; LED1.write(isOn); }, 1000);
