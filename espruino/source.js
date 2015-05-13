@@ -115,12 +115,6 @@ CAP1188.prototype.writeBits = function(reg, shift, val) {
   this.i2c.writeTo(this.addr, [reg, b]);
 };
 
-/* Set more bits in a register */
-CAP1188.prototype.query = function(reg, qty) {
-  I2C1.writeTo(this.addr, reg);
-  return I2C1.readFrom(this.addr, qty);
-};
-
 exports.connect = function (_i2c,_addr) {
   return new CAP1188(_i2c,_addr);
 };
@@ -139,9 +133,9 @@ function emit(msg) {
 //
 // Distance sensor (HC-SR04)
 //
-var sensor = require("HC-SR04").connect(/* trig */ A0, /* echo */ A1, function(dist) {
-  emit({ type: 'distance', value: dist, unit: 'cm' });
-});
+// var sensor = require("HC-SR04").connect(/* trig */ A0, /* echo */ A1, function(dist) {
+//   emit({ type: 'distance', value: dist, unit: 'cm' });
+// });
 
 // Setup I2C
 I2C1.setup({scl:B6,sda:B7});
@@ -149,7 +143,7 @@ I2C1.setup({scl:B6,sda:B7});
 //
 // Digital accelerometer and gyro (MPU6050)
 //
-var mpu = require("MPU6050").connect(I2C1);
+// var mpu = require("MPU6050").connect(I2C1);
 
 //
 // Capacitive breakout (CAP1188)
@@ -159,20 +153,22 @@ var cap = exports.connect(I2C1);
 var isOn = false;
 setInterval(function () {
   // Distance sensor
-  sensor.trigger();
+  if (sensor) {
+    sensor.trigger();
+  }
 
   // Capacitive
-  emit({ type: 'cap', unit: 'touched', pins: cap.readTouches() });
+  if (cap) {
+    emit({ type: 'cap', unit: 'touched', pins: cap.readTouches() });
+  }
 
   // Gyro
-  emit({ type: 'accel', unit: 'raw', xyz : mpu.getAcceleration() });
-  emit({ type: 'gyro', unit: 'deg', xyz : mpu.getDegreesPerSecond() });
-  //mpu.getAcceleration(); // returns an [x,y,z] array with raw accl. data
-  //mpu.getGravity();  // returns acceleration array in G's
-  //mpu.getRotation(); // returns an [x,y,z] array with raw gyro data
-  //mpu.getDegreesPerSecond(); // returns gyro array in degrees/s
+  if (mpu) {
+    emit({ type: 'accel', unit: 'raw', xyz : mpu.getAcceleration() });
+    emit({ type: 'gyro', unit: 'deg', xyz : mpu.getDegreesPerSecond() });
+  }
 
   // Blink on-board LED
-  isOn = !isOn; LED3.write(isOn);
+  isOn = !isOn; LED2.write(isOn);
 }, 500);
 
