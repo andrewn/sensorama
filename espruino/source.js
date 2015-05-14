@@ -122,11 +122,18 @@ exports.connect = function (_i2c,_addr) {
 
 })();
 
+
+// This flag is enabled after a timeout
+var shouldEmit = false,
+    shouldEmitTimeout = 2000;
+
 //
 // Generic helper methods
 //
 function emit(msg) {
-  USB.println( JSON.stringify(msg) );
+  if (shouldEmit) {
+    USB.println( JSON.stringify(msg) );
+  }
   // schedule another timeout?
 }
 
@@ -171,4 +178,6 @@ setInterval(function () {
   // Blink on-board LED
   isOn = !isOn; LED2.write(isOn);
 }, 500);
+
+setTimeout(function () { shouldEmit = true; }, shouldEmitTimeout);
 
