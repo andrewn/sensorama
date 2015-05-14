@@ -33,7 +33,11 @@ serialPromise
       console.log('MESSAGE', msg);
       web.broadcast('sensor', msg);
       router.process(msg);
+
+      // TODO: Send only when new client connects
+      web.broadcast('sensor', { type: 'sounds', sounds: router.pinSounds });
     });
+    receiver.on('disconnect', gracefulExit);
   })
   .catch(errorAndExit);
 

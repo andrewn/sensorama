@@ -22,6 +22,11 @@
   color: hsl(175, 91%, 50%);
 }
 
+.measurement .assigned {
+  display: inline-block;
+  font-size: 0.35em;
+}
+
 .measurement .touches {
   display: block;
 }

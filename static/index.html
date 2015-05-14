@@ -12,6 +12,7 @@
     the player.
   -->
   <!-- <script src="/radiodan/client.js"></script> -->
+
   <script src="/socket.io/socket.io.js"></script>
   <title>Sensors</title>
 </head>
@@ -45,11 +46,23 @@
       <span class="label">Capacitive</span>
       <div class="touches">
         {{#pins:i}}
-        <span class="touch {{ (. === true)? 'is-touched' : '' }}">{{i + 1}}</span>
+        <span class="touch {{ (. === true)? 'is-touched' : '' }}">
+          {{i + 1}}
+        </span>
         {{/pins}}
       </div>
     </div>
     {{/cap}}
+    {{#sounds}}
+    <div class="measurement">
+      <span class="label">Sounds</span>
+      <div class="">
+        {{#sounds:i}}
+        <span class="value">{{ i }}. {{ . }}</span>
+        {{/sounds}}
+      </div>
+    </div>
+    {{/sounds}}
   </script>
   <script src="/js/bundle.js"></script>
 </body><!-- .container -->
