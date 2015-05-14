@@ -1,14 +1,17 @@
 var Promise = require('es6-promise').Promise,
     fs = require('fs'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    radiodan = require('radiodan-client').create();
 
 var Espruino = require('./lib/espruino'),
     Receiver = require('./lib/receiver'),
+    Router   = require('./lib/router'),
     Web      = require('./lib/web');
 
 var serialNum    = process.env.ESPRUINO_SERIAL_NUM,
     codeFilePath = __dirname + '/espruino/source.js',
-    port = process.env.PORT;
+    port = process.env.PORT,
+    player = radiodan.player.get('main');
 
 if (!port) {
   console.log('Set PORT variable');
@@ -16,7 +19,9 @@ if (!port) {
 }
 
 console.log('Listen on port', port);
+
 var web = new Web(port),
+    router = new Router(player),
     receiver;
 
 var serialPromise = programmeEspruino(serialNum, codeFilePath);
@@ -27,6 +32,7 @@ serialPromise
     receiver.on('msg', function (msg) {
       console.log('MESSAGE', msg);
       web.broadcast('sensor', msg);
+      router.process(msg);
     });
   })
   .catch(errorAndExit);
