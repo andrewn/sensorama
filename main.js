@@ -1,4 +1,5 @@
-var Promise = require('es6-promise').Promise,
+var debug = require('debug')('sensors'),
+    Promise = require('es6-promise').Promise,
     fs = require('fs'),
     _ = require('lodash'),
     radiodan = require('radiodan-client').create();
@@ -14,11 +15,11 @@ var serialNum    = process.env.ESPRUINO_SERIAL_NUM,
     player = radiodan.player.get('main');
 
 if (!port) {
-  console.log('Set PORT variable');
+  debug('Set PORT variable');
   process.exit(1);
 }
 
-console.log('Listen on port', port);
+debug('Listen on port', port);
 
 var web = new Web(port),
     router = new Router(player),
@@ -27,10 +28,10 @@ var web = new Web(port),
 var serialPromise = programmeEspruino(serialNum, codeFilePath);
 serialPromise
   .then(function (serialPort) {
-    console.log('Connecting receiver on port: ', serialPort);
+    debug('Connecting receiver on port: ', serialPort);
     receiver = new Receiver(serialPort);
     receiver.on('msg', function (msg) {
-      console.log('MESSAGE', msg);
+      debug('MESSAGE', msg);
       web.broadcast('sensor', msg);
       router.process(msg);
 
@@ -67,11 +68,11 @@ function programmeEspruino(serialNum, filePath) {
         throw new Error('No serial port found');
       }
 
-      console.log('Uploading to serial port: ', serialPort, ' from: ', filePath);
+      debug('Uploading to serial port: ', serialPort, ' from: ', filePath);
 
       return Espruino.upload(serialPort, filePath)
         .then(function () {
-          console.log('Done uploading');
+          debug('Done uploading');
           return serialPort;
         })
     })
@@ -95,7 +96,7 @@ function findEspruino() {
 
 
 function getSerialPort(info) {
-  console.log('getSerialPort', info.port);
+  debug('getSerialPort', info.port);
   return info.port;
 }
 
