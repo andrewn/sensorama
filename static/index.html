@@ -25,6 +25,12 @@
       <span class="value">{{ Math.round(value) }}{{ unit }}</span>
     </div>
     {{/distance}}
+    {{#rfid}}
+    <div class="measurement">
+      <span class="label">RFID</span>
+      <span class="value">{{ value }}</span>
+    </div>
+    {{/rfid}}
     {{#accel}}
     <div class="measurement">
       <span class="label">Acceleration</span>

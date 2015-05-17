@@ -1,4 +1,5 @@
 var debug = require('debug')('sensors'),
+    log   = console.log,
     Promise = require('es6-promise').Promise,
     fs = require('fs'),
     _ = require('lodash'),
@@ -6,16 +7,18 @@ var debug = require('debug')('sensors'),
 
 var Espruino = require('./lib/espruino'),
     Receiver = require('./lib/receiver'),
+    rfidReader = require('./lib/rfid'),
     Router   = require('./lib/router'),
     Web      = require('./lib/web');
 
 var serialNum    = process.env.ESPRUINO_SERIAL_NUM,
+    rfidSerial   = process.env.RFID_SERIAL_PORT,
     codeFilePath = __dirname + '/espruino/source.js',
     port = process.env.PORT,
     player = radiodan.player.get('main');
 
 if (!port) {
-  debug('Set PORT variable');
+  log('Set PORT variable');
   process.exit(1);
 }
 
@@ -24,6 +27,20 @@ debug('Listen on port', port);
 var web = new Web(port),
     router = new Router(player),
     receiver;
+
+if (!rfidSerial) {
+  log('RFID_SERIAL_PORT not set, will not connect to RFID reader');
+} else {
+  rfid = rfidReader(rfidSerial);
+  rfid.on('tag:added', function (id) {
+    log('RFID tag added: ', id);
+    web.broadcast('sensor', { type: 'rfid', value: id });
+  });
+  rfid.on('tag:removed', function (id) {
+    log('RFID tag removed: ', id);
+    web.broadcast('sensor', { type: 'rfid', value: null });
+  });
+}
 
 var serialPromise = programmeEspruino(serialNum, codeFilePath);
 serialPromise
