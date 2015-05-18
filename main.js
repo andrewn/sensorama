@@ -53,7 +53,8 @@ serialPromise
       router.process(msg);
 
       // TODO: Send only when new client connects
-      web.broadcast('sensor', { type: 'sounds', sounds: router.pinSounds });
+      web.broadcast('sensor', { type: 'assignedSounds', sounds: router.pinSounds });
+      web.broadcast('sensor', { type: 'sounds', sounds: router.availableSounds });
     });
     receiver.on('disconnect', gracefulExit);
   })

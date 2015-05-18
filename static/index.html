@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/bundle.css">
 
   <!--
     Loads the radiodan client library
@@ -16,7 +16,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <title>Sensors</title>
 </head>
-<body class="container">
+<body data-page="sensors" class="container">
   <div id="ui"></div>
   <script id="ui-template" type="text/ractive">
     {{#distance}}
@@ -59,7 +59,7 @@
       </div>
     </div>
     {{/cap}}
-    {{#sounds}}
+    {{#assignedSounds}}
     <div class="measurement">
       <span class="label">Sounds</span>
       <div class="">
@@ -68,7 +68,7 @@
         {{/sounds}}
       </div>
     </div>
-    {{/sounds}}
+    {{/assignedSounds}}
   </script>
   <script src="/js/bundle.js"></script>
 </body><!-- .container -->

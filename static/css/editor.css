@@ -1,0 +1,63 @@
+[data-page='editor'] {
+  background-color: #222;
+  color: #eee;
+
+  font-size: 3rem;
+}
+
+[data-page='editor'] .instructions {
+  font-size: 2rem;
+}
+
+[data-page='editor'] .touches {
+  width: 10vw;
+}
+
+[data-page='editor'] .touch {
+  position: relative;
+  display: inline-block;
+  width: 10vw;
+  height: 10vw;
+  line-height: 10vw;
+  text-align: center;
+
+  margin: 1vw;
+
+  border: 1px solid hsl(175, 91%, 50%);
+  border-radius: 10vw;
+}
+/*
+[data-page='editor'] .touch:hover {
+  background-color: hsl(175, 91%, 50%);
+  color: #222;
+}
+*/
+[data-page='editor'] .touch .sound {
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+
+  height: 1vw;
+  line-height: 1vw;
+
+  font-size: 2rem;
+}
+
+[data-page='editor'] .touch.is-assigned,
+[data-page='editor'] .touch.is-assigned .sound {
+  background-color: hsl(175, 91%, 50%);
+  color: #222;
+}
+
+
+[data-page='editor'] .sound {
+  display: inline-block;
+  padding: 1rem;
+  border: 1px solid hsl(175, 91%, 50%);
+}
+
+[data-page='editor'] .sounds .sound {
+  display: block;
+  margin: 1rem 0;
+}
