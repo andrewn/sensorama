@@ -1,0 +1,48 @@
+.measurement {
+  font-size: 3em;
+  padding: 0.4em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.measurement:last-child {
+  border-bottom: none;
+}
+
+.measurement .label {
+  display: inline-block;
+  min-width: 6em;
+}
+
+.measurement .value {
+  display: inline-block;
+  min-width: 3em;
+  text-align: right;
+  color: hsl(175, 91%, 50%);
+}
+
+.measurement .assigned {
+  display: inline-block;
+  font-size: 0.35em;
+}
+
+.measurement .touches {
+  display: block;
+}
+
+.measurement .touch {
+  display: inline-block;
+  width: 12.5%;
+  height: 7rem;
+  line-height: 7rem;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  border: 1px solid rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.touches .touch.is-touched {
+  background-color: hsl(175, 91%, 50%);
+}
