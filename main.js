@@ -1,4 +1,4 @@
-var debug = require('debug')('sensors'),
+var debug = require('debug')('sensors:main'),
     log   = console.log,
     Promise = require('es6-promise').Promise,
     fs = require('fs'),
@@ -28,6 +28,10 @@ var web = new Web(port),
     router = new Router(player),
     receiver;
 
+web.on('incoming-msg', function (msg) {
+  router.processUi(msg);
+});
+
 if (!rfidSerial) {
   log('RFID_SERIAL_PORT not set, will not connect to RFID reader');
 } else {
@@ -50,7 +54,7 @@ serialPromise
     receiver.on('msg', function (msg) {
       debug('MESSAGE', msg);
       web.broadcast('sensor', msg);
-      router.process(msg);
+      router.processSensor(msg);
 
       // TODO: Send only when new client connects
       web.broadcast('sensor', { type: 'assignedSounds', sounds: router.pinSounds });

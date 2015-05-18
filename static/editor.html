@@ -17,10 +17,10 @@
         <span class="label">Sensors</span>
         <div class="touches">
           {{#pins:i}}
-          <span class="touch {{ (. === true)? 'is-touched' : '' }} {{ assignedSounds.sounds[i+1] ? 'is-assigned' : '' }}">
+          <span class="touch {{ (. === true)? 'is-touched' : '' }} {{ assignedSounds.sounds[i] ? 'is-assigned' : '' }}">
             {{i + 1}}
-            {{#assignedSounds.sounds[i+1] }}
-              <span class="sound">{{ assignedSounds.sounds[i+1] }}</span>
+            {{#assignedSounds.sounds[i] }}
+              <span on-drag="remove" class="sound">{{ assignedSounds.sounds[i] }}</span>
             {{/}}
           </span>
           {{/pins}}

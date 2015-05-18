@@ -26,6 +26,11 @@
   border: 1px solid hsl(175, 91%, 50%);
   border-radius: 10vw;
 }
+
+[data-page='editor'] .touch.is-touched {
+  border-color: #ff0;
+}
+
 /*
 [data-page='editor'] .touch:hover {
   background-color: hsl(175, 91%, 50%);
