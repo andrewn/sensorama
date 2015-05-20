@@ -1,5 +1,7 @@
 var Ractive = require('ractive'),
-    dragToDeleteEvent = require('./ractive-drag-to-delete-event');
+    dragToDeleteEvent = require('./ractive/event/drag-to-delete'),
+    dropEvent = require('./ractive/event/drop'),
+    draggableDecorator = require('./ractive/decorator/draggable');
 
 var socket = io();
 
@@ -7,7 +9,11 @@ var ractive = new Ractive({
   el: '#ui',
   template: '#ui-template',
   events: {
-    'drag': dragToDeleteEvent
+    'drag': dragToDeleteEvent,
+    'drop': dropEvent
+  },
+  decorators: {
+    'draggable': draggableDecorator
   },
   data: {
     round: round
@@ -20,11 +26,19 @@ ractive.on('remove', function (evt) {
   socket.emit('ui', msg);
 })
 
+ractive.on('dropped', function (evt) {
+  console.log('dropped', evt.content);
+  var pin = evt.index.i,
+      sound = evt.content,
+      msg = { type: 'cap', action: 'add', value: pin, sound: sound };
+  socket.emit('ui', msg);
+});
+
 function round(vals) {
   return vals.map ? vals.map(round) : Math.round(vals);
 }
 
 socket.on('sensor', function (msg) {
-  console.log('msg', msg);
+  // console.log('msg', msg);
   ractive.animate(msg.type, msg);
 });

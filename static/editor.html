@@ -17,9 +17,9 @@
         <span class="label">Sensors</span>
         <div class="touches">
           {{#pins:i}}
-          <span class="touch {{ (. === true)? 'is-touched' : '' }} {{ assignedSounds.sounds[i] ? 'is-assigned' : '' }}">
+          <span on-drop="dropped" class="touch {{ (. === true)? 'is-touched' : '' }} {{ assignedSounds.sounds[i] ? 'is-assigned' : '' }}">
             {{i + 1}}
-            {{#assignedSounds.sounds[i] }}
+            {{#assignedSounds.sounds[i]}}
               <span on-drag="remove" class="sound">{{ assignedSounds.sounds[i] }}</span>
             {{/}}
           </span>
@@ -32,7 +32,7 @@
         <span class="label">Actions</span>
         <div class="sounds">
           {{#sounds:i}}
-          <span class="sound">{{ . }}</span>
+          <span class="sound" decorator="draggable:{{.}}">{{ . }}</span>
           {{/sounds}}
         </div>
       </div>

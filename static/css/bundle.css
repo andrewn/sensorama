@@ -781,8 +781,8 @@ there.
 }[data-page=sensors] .touches .touch.is-touched {
   background-color: hsl(175, 91%, 50%);
 }[data-page='editor'] {
-  background-color: #222;
-  color: #eee;
+  background-color: rgb(34, 34, 34);
+  color: rgb(238, 238, 238);
   font-size: 3rem;
 }[data-page='editor'] .instructions {
   font-size: 2rem;
@@ -820,6 +820,7 @@ there.
 }[data-page='editor'] .sound {
   display: inline-block;
   padding: 1rem;
+  background: rgba(34, 34, 34, 0.8);
   border: 1px solid hsl(175, 91%, 50%);
 }[data-page='editor'] .sounds .sound {
   display: block;
