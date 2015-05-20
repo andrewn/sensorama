@@ -10,7 +10,7 @@
 }
 
 [data-page='editor'] .touches {
-  width: 10vw;
+  width: 50vw;
 }
 
 [data-page='editor'] .touch {
@@ -21,7 +21,7 @@
   line-height: 10vw;
   text-align: center;
 
-  margin: 1vw;
+  margin: 1vw 9vw 1vw 1vw;
 
   border: 4px solid hsl(175, 91%, 50%);
   border-radius: 10vw;
