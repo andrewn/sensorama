@@ -98,7 +98,7 @@ function programmeEspruino(serialNum, filePath) {
           return serialPort;
         })
     })
-    .catch(error);
+    .catch(errorAndExit);
 }
 
 function findEspruinoBySerialNumber(serialNum) {
