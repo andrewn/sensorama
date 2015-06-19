@@ -14,17 +14,41 @@ bridge and controls a radiodan app.
 
 First [espruino-tools](https://github.com/espruino/espruino-tools) must be installed and the `espruinotool` must be available in the path.
 
-Then:
+You can put espruino-tools anywhere on your system:
 
-    git clone https://github.com/radiodan/sensorama.git
-    cd sensorama
+    cd ~
+    git clone https://github.com/espruino/espruino-tools.git
+    cd espruino-tools
+    sudo npm link
+
+Then install sensorama:
+
+    git clone https://github.com/radiodan/sensorama.git sensors
+    cd sensors
+    npm link espruino-tools
+    cd ./node_modules/espruino-tools
+    git submodule add https://github.com/espruino/EspruinoTools.git
+    cd ../..
     npm install
 
 ## Running
 
+### On a radiodan
+
+Copy the supervisor script into place and enable it:
+
+    cp radiodan-type-sensors.conf /etc/supervisor/available/radiodan-type-sensors.conf
+    sudo radiodan-device-type radiodan-type-sensors.conf
+
+### For development locally
+
+Use foreman to run the Procfile:
+
     npm start
 
 This will start the radiodan server (for controlling audio) and `main.js`.
+
+## Startup
 
 `main.js` runs as follows:
 
