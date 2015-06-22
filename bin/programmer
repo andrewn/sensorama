@@ -1,0 +1,100 @@
+#!/usr/bin/env node
+
+var debug = require('debug')('sensors:programmer'),
+    msg = console.log,
+    Promise = require('es6-promise').Promise,
+    fs = require('fs'),
+    path = require('path'),
+    _ = require('lodash');
+
+var Espruino = require('../lib/espruino');
+
+var serialNum    = process.env.ESPRUINO_SERIAL_NUM,
+    codeFilePath = path.join(__dirname, '..',  '/espruino/source.js');
+
+msg('Programme espruino at with code', codeFilePath);
+
+var serialPromise = programmeEspruino(serialNum, codeFilePath);
+serialPromise
+  .then(function (serialPort) {
+    msg('Espruino has been programmed');
+  })
+  .catch(errorAndExit);
+
+process
+  .on('SIGINT', gracefulExit)
+  .on('SIGTERM', gracefulExit);
+
+function gracefulExit() {
+  // disconnect open serial ports
+  // via Espruino.closeAll() ?
+  if (receiver) { receiver.close(); }
+  process.exit();
+}
+
+function programmeEspruino(serialNum, filePath) {
+  var finderPromise;
+
+  if (serialNum) {
+    finderPromise = findEspruinoBySerialNumber(serialNum);
+  } else {
+    finderPromise = findEspruino();
+  }
+
+  return finderPromise
+    .then(function (serialPort) {
+      if (!serialPort) {
+        throw new Error('No serial port found');
+      }
+
+      debug('Uploading to serial port: ', serialPort, ' from: ', filePath);
+
+      return Espruino.upload(serialPort, filePath)
+        .then(function () {
+          debug('Done uploading');
+          return Espruino.save(serialPort);
+        })
+        .then(function () {
+          debug('Saved');
+        });
+    })
+    .catch(errorAndExit);
+}
+
+function findEspruinoBySerialNumber(serialNum) {
+  return Espruino
+    .findBySerialNumber(serialNum)
+    .then(getSerialPort);
+}
+
+function findEspruino() {
+  return Espruino
+    .findEspruinos()
+    .then(function (espruinos) {
+      return _.first(espruinos);
+    })
+    .then(getSerialPort);
+}
+
+
+function getSerialPort(info) {
+  debug('getSerialPort', info.port);
+  return info.port;
+}
+
+// function getCode(filePath) {
+//   return new Promise(function (resolve, reject) {
+//     fs.readFile(filePath, function (err, data) {
+//       err ? reject(err) : resolve(data.toString());
+//     });
+//   });
+// }
+
+function error(err) {
+  console.error(err.stack);
+}
+
+function errorAndExit(err) {
+  error(err);
+  gracefulExit();
+}

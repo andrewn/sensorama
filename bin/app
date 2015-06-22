@@ -1,19 +1,21 @@
-var debug = require('debug')('sensors:main'),
+#!/usr/bin/env node
+
+var debug = require('debug')('sensors:app'),
     log   = console.log,
+    error = console.error,
     Promise = require('es6-promise').Promise,
     fs = require('fs'),
     _ = require('lodash'),
     radiodan = require('radiodan-client').create();
 
-var Espruino = require('./lib/espruino'),
-    Receiver = require('./lib/receiver'),
-    rfidReader = require('./lib/rfid'),
-    Router   = require('./lib/router'),
-    Web      = require('./lib/web');
+var Espruino = require('../lib/espruino'),
+    Receiver = require('../lib/receiver'),
+    rfidReader = require('../lib/rfid'),
+    Router   = require('../lib/router'),
+    Web      = require('../lib/web');
 
 var serialNum    = process.env.ESPRUINO_SERIAL_NUM,
     rfidSerial   = process.env.RFID_SERIAL_PORT,
-    codeFilePath = __dirname + '/espruino/source.js',
     port = process.env.PORT,
     player = radiodan.player.get('main');
 
@@ -46,7 +48,7 @@ if (!rfidSerial) {
   });
 }
 
-var serialPromise = programmeEspruino(serialNum, codeFilePath);
+var serialPromise = findAvailableEspruino(serialNum);
 serialPromise
   .then(function (serialPort) {
     debug('Connecting receiver on port: ', serialPort);
@@ -75,7 +77,7 @@ function gracefulExit() {
   process.exit();
 }
 
-function programmeEspruino(serialNum, filePath) {
+function findAvailableEspruino(serialNum) {
   var finderPromise;
 
   if (serialNum) {
@@ -88,15 +90,9 @@ function programmeEspruino(serialNum, filePath) {
     .then(function (serialPort) {
       if (!serialPort) {
         throw new Error('No serial port found');
+      } else {
+        return serialPort;
       }
-
-      debug('Uploading to serial port: ', serialPort, ' from: ', filePath);
-
-      return Espruino.upload(serialPort, filePath)
-        .then(function () {
-          debug('Done uploading');
-          return serialPort;
-        })
     })
     .catch(errorAndExit);
 }
@@ -118,16 +114,9 @@ function findEspruino() {
 
 
 function getSerialPort(info) {
-  debug('getSerialPort', info.port);
-  return info.port;
-}
-
-function getCode(filePath) {
-  return new Promise(function (resolve, reject) {
-    fs.readFile(filePath, function (err, data) {
-      err ? reject(err) : resolve(data.toString());
-    });
-  });
+  var port = info ? info.port : null;
+  debug('getSerialPort', port);
+  return port;
 }
 
 function error(err) {

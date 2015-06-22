@@ -1,10 +1,9 @@
 {
-  "name": "radiodan-skeleton",
+  "name": "sensors",
   "version": "0.0.0",
-  "description": "An bare-bones Radiodan application",
-  "main": "main.js",
+  "description": "",
   "scripts": {
-    "start": "node_modules/.bin/nf start",
+    "start": "PORT=5000 ./bin/app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify -t brfs static/js/app.js -o static/js/bundle.js",
     "watch": "watchify -t brfs static/js/app.js -o static/js/bundle.js --debug --verbose",
@@ -13,7 +12,6 @@
   "author": "Andrew Nicolaou <andrew.nicolaou@bbc.co.uk>",
   "license": "Apache-2",
   "dependencies": {
-    "radiodan": "git+https://github.com/radiodan/radiodan.js#stable",
     "radiodan-client": "~1.0.0",
     "foreman": "~1.2.0",
     "express": "~4.10.7",
