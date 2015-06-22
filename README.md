@@ -4,11 +4,14 @@ Sensorama
 Connects to a range of sensors via a microcontroller
 bridge and controls a radiodan app.
 
+The sensors are connected to an [Espruino](http://www.espruino.com/) which connects via USB to a host machine (we use a Raspberry Pi). The Espruino periodically sends the sensor state to the host.
+
 ## Requirements
 
-- mpd
-- rabbitmq
-- node.js
+- [mopidy](https://www.mopidy.com/)
+- [Radiodan server](https://github.com/radiodan/radiodan.js)
+- [Radiodan broker](https://github.com/radiodan/broker)
+- [node.js](https://nodejs.org/)
 
 ## Installation
 
@@ -21,7 +24,7 @@ You can put espruino-tools anywhere on your system:
     cd espruino-tools
     sudo npm link
 
-Then install sensorama:
+Then install this app:
 
     git clone https://github.com/radiodan/sensorama.git sensors
     cd sensors
@@ -31,30 +34,30 @@ Then install sensorama:
     cd ../..
     npm install
 
+## Programming the Espruino
+
+The espruino only needs to be programmed once. This program is saved onto the flash memory and will run each time the Espruino is powered up.
+
+This step requires internet access, since any required modules are downloaded from the espruino website.
+
+To programme, run the following:
+
+    bin/programmer
+
 ## Running
 
-### On a radiodan
+### For development locally
+
+Start the radiodan server and broker. Then run:
+
+    PORT=5000 bin/app
+
+### Starting automatically
 
 Copy the supervisor script into place and enable it:
 
     cp radiodan-type-sensors.conf /etc/supervisor/available/radiodan-type-sensors.conf
     sudo radiodan-device-type radiodan-type-sensors.conf
-
-### For development locally
-
-Use foreman to run the Procfile:
-
-    npm start
-
-This will start the radiodan server (for controlling audio) and `main.js`.
-
-## Startup
-
-`main.js` runs as follows:
-
-1. An espruino is found (see Which Espriuno? below)
-2. The contents of `espruino/source.js` are used to programme the espruino, requiring any modules from the internet in that source file.
-3. A new serial connection will be established to the espruino over USB, receiving sensor data.
 
 ## Which Espruino?
 
