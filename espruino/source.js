@@ -41,6 +41,7 @@ I2C1.setup({ scl: I2C_SCL, sda: I2C_SDA });
 // Capacitive breakout (CAP1188)
 //
 var cap = require('CAP1188').connect(I2C1);
+cap.linkLedsToSensors();
 
 var isOn = false;
 setInterval(function () {
