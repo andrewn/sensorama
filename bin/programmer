@@ -36,9 +36,9 @@ function programmeEspruino(serialNum, filePath) {
   var finderPromise;
 
   if (serialNum) {
-    finderPromise = findEspruinoBySerialNumber(serialNum);
+    finderPromise = Espruino.findBySerialNumber(serialNum);
   } else {
-    finderPromise = findEspruino();
+    finderPromise = Espruino.findEspruinos().then(_.first);
   }
 
   return finderPromise
@@ -60,35 +60,6 @@ function programmeEspruino(serialNum, filePath) {
     })
     .catch(errorAndExit);
 }
-
-function findEspruinoBySerialNumber(serialNum) {
-  return Espruino
-    .findBySerialNumber(serialNum)
-    .then(getSerialPort);
-}
-
-function findEspruino() {
-  return Espruino
-    .findEspruinos()
-    .then(function (espruinos) {
-      return _.first(espruinos);
-    })
-    .then(getSerialPort);
-}
-
-
-function getSerialPort(info) {
-  debug('getSerialPort', info.port);
-  return info.port;
-}
-
-// function getCode(filePath) {
-//   return new Promise(function (resolve, reject) {
-//     fs.readFile(filePath, function (err, data) {
-//       err ? reject(err) : resolve(data.toString());
-//     });
-//   });
-// }
 
 function error(err) {
   console.error(err.stack);

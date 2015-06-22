@@ -81,9 +81,9 @@ function findAvailableEspruino(serialNum) {
   var finderPromise;
 
   if (serialNum) {
-    finderPromise = findEspruinoBySerialNumber(serialNum);
+    finderPromise = Espruino.findBySerialNumber(serialNum);
   } else {
-    finderPromise = findEspruino();
+    finderPromise = Espruino.findEspruinos().then(_.first);
   }
 
   return finderPromise
@@ -95,28 +95,6 @@ function findAvailableEspruino(serialNum) {
       }
     })
     .catch(errorAndExit);
-}
-
-function findEspruinoBySerialNumber(serialNum) {
-  return Espruino
-    .findBySerialNumber(serialNum)
-    .then(getSerialPort);
-}
-
-function findEspruino() {
-  return Espruino
-    .findEspruinos()
-    .then(function (espruinos) {
-      return _.first(espruinos);
-    })
-    .then(getSerialPort);
-}
-
-
-function getSerialPort(info) {
-  var port = info ? info.port : null;
-  debug('getSerialPort', port);
-  return port;
 }
 
 function error(err) {
