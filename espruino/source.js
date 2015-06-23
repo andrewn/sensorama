@@ -32,6 +32,11 @@ function emit(msg) {
 // Setup I2C
 I2C1.setup({ scl: I2C_SCL, sda: I2C_SDA });
 
+// Setup SPI
+SPI1.setup({ sck:A5, miso:A6, mosi:A7 });
+
+var nfc = require("MFRC522").connect(SPI1, B1 /*CS*/);
+
 //
 // Digital accelerometer and gyro (MPU6050)
 //
@@ -59,6 +64,14 @@ setInterval(function () {
   if (mpu) {
     emit({ type: 'accel', unit: 'raw', xyz : mpu.getAcceleration() });
     emit({ type: 'gyro', unit: 'deg', xyz : mpu.getDegreesPerSecond() });
+  }
+
+  if (nfc) {
+    nfc.findCards(function (card) {
+      if (card) {
+        emit({ type: 'rfid', unit: 'id', value: card });
+      }
+    });
   }
 
   // Blink on-board LED

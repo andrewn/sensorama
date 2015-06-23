@@ -40,5 +40,9 @@ function round(vals) {
 
 socket.on('sensor', function (msg) {
   // console.log('msg', msg);
-  ractive.animate(msg.type, msg);
+  if (msg.type === 'rfid') {
+    ractive.set(msg.type, msg);
+  } else {
+    ractive.animate(msg.type, msg);
+  }
 });
