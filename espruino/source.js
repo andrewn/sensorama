@@ -22,6 +22,18 @@ function emit(msg) {
   // schedule another timeout?
 }
 
+function isArraySame(ar1, ar2) {
+  if (ar1.length != ar2.length) { return false; }
+
+  for (var i = 0, len = ar1.length; i < len; i++) {
+    if (ar1[i] !== ar2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 //
 // Distance sensor (HC-SR04)
 //
@@ -48,8 +60,11 @@ var nfc = require("MFRC522").connect(SPI1, B1 /*CS*/);
 var cap = require('CAP1188').connect(I2C1);
 cap.linkLedsToSensors();
 
-var isOn = false;
+var isOn = false,
+    lastCapValue = [];
 setInterval(function () {
+  var touches;
+
   // Distance sensor
   if (sensor) {
     sensor.trigger();
@@ -57,7 +72,14 @@ setInterval(function () {
 
   // Capacitive
   if (cap) {
-    emit({ type: 'cap', unit: 'touched', pins: cap.readTouches() });
+    touches = cap.readTouches();
+    if ( !isArraySame(lastCapValue, touches) ) {
+      emit({ type: 'cap', unit: 'touched', pins: touches });
+      lastCapValue = touches;
+    }
+    // else {
+    //   emit({ type: 'nothing' });
+    // }
   }
 
   // Gyro
