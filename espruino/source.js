@@ -48,7 +48,7 @@ I2C1.setup({ scl: I2C_SCL, sda: I2C_SDA });
 SPI1.setup({ sck:A5, miso:A6, mosi:A7 });
 
 var nfc = require("MFRC522").connect(SPI1, B1 /*CS*/);
-
+nfc.init();
 //
 // Digital accelerometer and gyro (MPU6050)
 //
@@ -100,5 +100,10 @@ setInterval(function () {
   isOn = !isOn; LED2.write(isOn);
 }, 500);
 
-setTimeout(function () { shouldEmit = true; }, shouldEmitTimeout);
+setTimeout(function () {
+  if (nfc) {
+    nfc.init();
+  }
+  shouldEmit = true;
+}, shouldEmitTimeout);
 
