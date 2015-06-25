@@ -21,7 +21,8 @@ var pins = {
     echo: A1
   },
   cap: {
-    enabled: true
+    enabled: true,
+    reset: B15
   },
   nfc: {
     enabled: false,
@@ -56,13 +57,16 @@ function debug(msg) {
   if (config.debug) { console.log(msg); }
 }
 
-function resetCap(pin) {
+function resetCap(pin, cb) {
   var delay = 100;
   pin.write(0);
   setTimeout(function () {
     pin.write(1);
     setTimeout(function () {
       pin.write(0);
+      setTimeout(function () {
+        if (cb) { cb(); }
+      }, delay);
     }, delay);
   }, delay);
 }
@@ -172,9 +176,11 @@ function onInit() {
   // Capacitive breakout (CAP1188)
   //
   if (pins.cap.enabled) {
-    sensors.cap = require('CAP1188').connect(pins.I2C.instance);
-    sensors.cap.linkLedsToSensors();
-    debug('cap setup done');
+    resetCap(pins.cap.reset, function () {
+      sensors.cap = require('CAP1188').connect(pins.I2C.instance);
+      sensors.cap.linkLedsToSensors();
+      debug('cap setup done');
+    });
   }
 
   // Start the main sensor polling loop
