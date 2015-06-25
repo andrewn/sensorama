@@ -1,36 +1,70 @@
 /* jshint strict: true */
-/* global B6, B7, A0, A1, A5, A6, A7, USB, SPI1, I2C1, LED2 */
+/* global B1, B15, A0, A1, A5, A6, A7, USB, SPI1, I2C1, LED2 */
 'use strict';
 
 //
 // Configure pins
 //
-var I2C_SCL = B6;
-var I2C_SDA = B7;
+var pins = {
+  I2C: {
+    instance: I2C1 // The Espruino global
+  },
+  SPI: {
+    instance: SPI1, // The Espruino global
+    SCK: A5,
+    MISO: A6,
+    MOSI: A7
+  },
+  distance: {
+    enabled: false,
+    trigger: A0,
+    echo: A1
+  },
+  cap: {
+    enabled: true
+  },
+  nfc: {
+    enabled: false,
+    cs: B1
+  }
+};
 
-var DISTANCE_TRIGGER = A0;
-var DISTANCE_ECHO = A1;
+// Config
+var config = {
+  debug: false,
+  emitDelayMs: 2000
+};
 
-// State variables
-var shouldEmitTimeout = 2000,
-    shouldEmit,
-    isOn,
-    lastCapValue,
-    lastEmitMsg;
+// State
+var state = {};
 
 // Sensors
-var cap, sensor, nfc, mpu;
+var sensors = {};
 
 //
 // Generic helper methods
 //
 function emit(msg) {
   var json = JSON.stringify(msg);
-  if (shouldEmit) {
-    lastEmitMsg = json;
+  if (state.shouldEmit) {
     USB.println( json );
   }
   // schedule another timeout?
+}
+
+function debug(msg) {
+  if (config.debug) { console.log(msg); }
+}
+
+function resetCap(pin) {
+  var delay = 100;
+  pin.write(0);
+  setTimeout(function () {
+    pin.write(1);
+    setTimeout(function () {
+      pin.write(0);
+    }, delay);
+  }, delay);
 }
 
 function isArraySame(ar1, ar2) {
@@ -46,36 +80,36 @@ function isArraySame(ar1, ar2) {
 }
 
 function pollAndEmit() {
-  emit({ type: 'msg', value: 'poll' });
+  debug({ type: 'msg', value: 'poll' });
 
   var touches;
 
   // Distance sensor
-  if (sensor) {
-    sensor.trigger();
+  if (sensors.distance) {
+    sensors.distance.trigger();
   }
 
   // Capacitive
-  if (cap) {
-    emit({ type: 'msg', value: 'readTouches' });
-    touches = cap.readTouches();
-    if ( !isArraySame(lastCapValue, touches) ) {
+  if (sensors.cap) {
+    debug('read touches');
+    touches = sensors.cap.readTouches();
+    if ( !isArraySame(state.lastTouches, touches) ) {
       emit({ type: 'cap', unit: 'touched', pins: touches });
-      lastCapValue = touches;
+      state.lastTouches = touches;
     }
     else {
-      emit({ type: 'msg', value: 'touches are the same' });
+      debug('touches are the same');
     }
   }
 
   // Gyro
-  if (mpu) {
-    emit({ type: 'accel', unit: 'raw', xyz : mpu.getAcceleration() });
-    emit({ type: 'gyro', unit: 'deg', xyz : mpu.getDegreesPerSecond() });
+  if (sensors.mpu) {
+    emit({ type: 'accel', unit: 'raw', xyz : sensors.mpu.getAcceleration() });
+    emit({ type: 'gyro', unit: 'deg', xyz : sensors.mpu.getDegreesPerSecond() });
   }
 
-  if (nfc) {
-    nfc.findCards(function (card) {
+  if (sensors.nfc) {
+    sensors.nfc.findCards(function (card) {
       if (card) {
         emit({ type: 'rfid', unit: 'id', value: card });
       }
@@ -83,7 +117,7 @@ function pollAndEmit() {
   }
 
   // Blink on-board LED
-  isOn = !isOn; LED2.write(isOn);
+  state.isOn = !state.isOn; LED2.write(state.isOn);
 }
 
 function startPolling() {
@@ -95,33 +129,39 @@ function startPolling() {
 //
 function onInit() {
   // Initialise state
-  shouldEmit = false;
-  isOn = false;
-  lastCapValue = [];
+  state.isOn = false;
+  state.shouldEmit = false;
+  state.lastTouches = [];
 
-  console.log('Init');
+  debug('Init');
 
   // Initialise sensors
   //
 
   // Distance sensor (HC-SR04)
   //
-  // sensor = require("HC-SR04").connect(/* trig */ DISTANCE_TRIGGER, /* echo */ DISTANCE_ECHO, function(dist) {
-  //   emit({ type: 'distance', value: dist, unit: 'cm' });
-  // });
+  if (pins.distance.enabled) {
+    sensors.sensor = require('HC-SR04').connect(
+      /* trig */ pins.distance.trigger,
+      /* echo */ pins.distance.echo,
+      function(dist) {
+        emit({ type: 'distance', value: dist, unit: 'cm' });
+      }
+    );
+  }
 
   // Setup I2C
-  I2C1.setup({ scl: I2C_SCL, sda: I2C_SDA });
-
-  console.log('I2C setup done');
+  pins.I2C.instance.setup();
+  debug('I2C setup done');
 
   // Setup SPI
-  SPI1.setup({ sck:A5, miso:A6, mosi:A7 });
+  pins.SPI.instance.setup({ sck: pins.SPI.SCK, miso: pins.SPI.MISO, mosi: pins.SPI.MOSI });
+  debug('SPI setup done');
 
-  console.log('SPI setup done');
-
-  // nfc = require("MFRC522").connect(SPI1, B1 /*CS*/);
-  // nfc.init();
+  if (pins.nfc.enabled) {
+    sensors.nfc = require('MFRC522').connect(pins.SPI.instance, pins.nfc.cs /*CS*/);
+    sensors.nfc.init();
+  }
 
   //
   // Digital accelerometer and gyro (MPU6050)
@@ -131,22 +171,22 @@ function onInit() {
   //
   // Capacitive breakout (CAP1188)
   //
-  cap = require('CAP1188').connect(I2C1);
-  cap.linkLedsToSensors();
-
-  console.log('cap setup done');
+  if (pins.cap.enabled) {
+    sensors.cap = require('CAP1188').connect(pins.I2C.instance);
+    sensors.cap.linkLedsToSensors();
+    debug('cap setup done');
+  }
 
   // Start the main sensor polling loop
   startPolling();
-
-  console.log('started polling');
+  debug('started polling');
 
   // Wait before emitting anything over the
   // USB port
   setTimeout(function () {
-    if (nfc) {
-      nfc.init();
+    if (sensors.nfc) {
+      sensors.nfc.init();
     }
-    shouldEmit = true;
-  }, shouldEmitTimeout);
+    state.shouldEmit = true;
+  }, config.emitDelayMs);
 }
