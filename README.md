@@ -64,3 +64,25 @@ Copy the supervisor script into place and enable it:
 If ESPRUINO_SERIAL_NUM is set as a env variable or in the `.env` file, the Espruino with that serial number will be searched for and if connected it will be selected.
 
 If not, all serial ports are searched and the first connected Espruino is selected.
+
+## Pins
+
+### MRC522 RFID
+
+| Pico | MRC 522 |
+| B1   | SDA     |
+| B3   | SCK     |
+| B5   | MOSI    |
+| B4   | MISO    |
+| GND  | GND     |
+| VCC  | 3.3V    |
+
+### CAP1188
+
+| Pico   | CAP1188 |
+| Pi GND | GND     |
+| Pi 3V3 | VIN     |
+| B6     | SCK     |
+| B7     | SDA     |
+| B15    | RESET   |
+
