@@ -10,10 +10,7 @@ var pins = {
     instance: I2C1 // The Espruino global
   },
   SPI: {
-    instance: SPI1, // The Espruino global
-    SCK: A5,
-    MISO: A6,
-    MOSI: A7
+    instance: SPI3 // The Espruino global
   },
   distance: {
     enabled: false,
@@ -25,7 +22,7 @@ var pins = {
     reset: B15
   },
   nfc: {
-    enabled: false,
+    enabled: true,
     cs: B1
   }
 };
@@ -159,7 +156,7 @@ function onInit() {
   debug('I2C setup done');
 
   // Setup SPI
-  pins.SPI.instance.setup({ sck: pins.SPI.SCK, miso: pins.SPI.MISO, mosi: pins.SPI.MOSI });
+  pins.SPI.instance.setup();
   debug('SPI setup done');
 
   if (pins.nfc.enabled) {
