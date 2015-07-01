@@ -70,6 +70,7 @@ If not, all serial ports are searched and the first connected Espruino is select
 ### MRC522 RFID
 
 | Pico | MRC 522 |
+|------|---------|
 | B1   | SDA     |
 | B3   | SCK     |
 | B5   | MOSI    |
@@ -80,6 +81,7 @@ If not, all serial ports are searched and the first connected Espruino is select
 ### CAP1188
 
 | Pico   | CAP1188 |
+|--------|---------|
 | Pi GND | GND     |
 | Pi 3V3 | VIN     |
 | B6     | SCK     |
