@@ -2,7 +2,7 @@
   "dataPath": "/tmp/.radiodan-skeleton",
   "defaults": {
     "music": "../audio",
-    "player": "mopidy"
+    "player": "mpd"
   },
   "players": [
     {
