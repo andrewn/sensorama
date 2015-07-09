@@ -27,15 +27,11 @@ if (!port) {
 debug('Listen on port', port);
 
 var web = new Web(port),
-    router = new Router(player),
+    router = new Router(player, web),
     receiver;
 
-web.on('incoming-msg', function (msg) {
-  router.processUi(msg);
-});
-
 if (!rfidSerial) {
-  log('RFID_SERIAL_PORT not set, will not connect to RFID reader');
+  log('RFID_SERIAL_PORT not set, will not connect to USB/SERIAL RFID reader');
 } else {
   rfid = rfidReader(rfidSerial);
   rfid.on('tag:added', function (id) {
@@ -55,12 +51,14 @@ serialPromise
     receiver = new Receiver(serialPort);
     receiver.on('msg', function (msg) {
       debug('MESSAGE', msg);
-      web.broadcast('sensor', msg);
-      router.processSensor(msg);
 
-      // TODO: Send only when new client connects
-      web.broadcast('sensor', { type: 'assignedSounds', sounds: router.pinSounds });
-      web.broadcast('sensor', { type: 'sounds', sounds: router.availableSounds });
+      if (msg.type === 'cap') {
+        // Expand to individual targets
+        var states = _.map(msg.value, function (item, index) {
+          return { id: 'touch-' + index, name: index, type: 'cap', isActive: item };
+        });
+        router.updateTargetStates(states);
+      }
     });
     receiver.on('disconnect', gracefulExit);
   })

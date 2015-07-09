@@ -2,73 +2,39 @@
 <html>
 <head>
   <link rel="stylesheet" href="/css/bundle.css">
-
-  <!--
-    Loads the radiodan client library
-    provided by the middleware.
-
-    This exposes a `radiodan` object in
-    javascript that you can use to control
-    the player.
-  -->
-  <!-- <script src="/radiodan/client.js"></script> -->
-
   <script src="/socket.io/socket.io.js"></script>
-  <title>Sensors</title>
+  <title>Editor</title>
 </head>
-<body data-page="sensors" class="container">
+<body data-page="editor" class="container">
   <div id="ui"></div>
   <script id="ui-template" type="text/ractive">
-    {{#distance}}
-    <div class="measurement">
-      <span class="label">Distance</span>
-      <span class="value">{{ Math.round(value) }}{{ unit }}</span>
+    <div class="row instructions">
+      <p class="column">Drag actions to assign to a sensor</p>
     </div>
-    {{/distance}}
-    {{#rfid}}
-    <div class="measurement">
-      <span class="label">RFID</span>
-      <span class="value">{{ value }}</span>
-    </div>
-    {{/rfid}}
-    {{#accel}}
-    <div class="measurement">
-      <span class="label">Acceleration</span>
-      <span class="value">{{ Math.round(xyz[0]) }}</span>
-      <span class="value">{{ Math.round(xyz[1]) }}</span>
-      <span class="value">{{ Math.round(xyz[2]) }}</span>
-    </div>
-    {{/accel}}
-    {{#gyro}}
-    <div class="measurement">
-      <span class="label">Gyroscope</span>
-      <span class="value">{{ Math.round(xyz[0]) }}</span>
-      <span class="value">{{ Math.round(xyz[1]) }}</span>
-      <span class="value">{{ Math.round(xyz[2]) }}</span>
-    </div>
-    {{/gyro}}
-    {{#cap}}
-    <div class="measurement">
-      <span class="label">Capacitive</span>
-      <div class="touches">
-        {{#pins:i}}
-        <span class="touch {{ (. === true)? 'is-touched' : '' }}">
-          {{i + 1}}
-        </span>
-        {{/pins}}
+    <div class="row">
+      <div class="one-half column">
+        <span class="label">Targets</span>
+        <div class="touches">
+          {{#targets}}
+          <span on-drop="dropped"
+                class="touch {{ (isActive === true)? 'is-touched' : '' }} {{ assignedSounds.sounds[i] ? 'is-assigned' : '' }}">
+            {{ name }}
+            {{#assignments[id]}}
+              <span on-drag="remove" class="sound">{{ assignments[id] }}</span>
+            {{/}}
+          </span>
+          {{/targets}}
+        </div>
       </div>
-    </div>
-    {{/cap}}
-    {{#assignedSounds}}
-    <div class="measurement">
-      <span class="label">Sounds</span>
-      <div class="">
-        {{#sounds:i}}
-        <span class="value">{{ i }}. {{ . }}</span>
-        {{/sounds}}
+      <div class="one-half column">
+        <span class="label">Actions</span>
+        <div class="sounds">
+          {{#actions:i}}
+          <span class="sound" decorator="draggable:{{.}}">{{ . }}</span>
+          {{/actions}}
+        </div>
       </div>
-    </div>
-    {{/assignedSounds}}
+    </div><!-- .u-row -->
   </script>
   <script src="/js/bundle.js"></script>
 </body><!-- .container -->

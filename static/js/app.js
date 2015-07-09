@@ -20,29 +20,35 @@ var ractive = new Ractive({
   }
 });
 
+//
+// When action is dragged away from
+// a target
+//
 ractive.on('remove', function (evt) {
-  var pin = evt.index.i,
-      msg = { type: 'cap', action: 'remove', value: pin };
-  socket.emit('ui', msg);
-})
+  var target = evt.context.id,
+      msg = { name: 'dissociate', target: target };
+  socket.emit('command', msg);
+});
 
+//
+// When action dropped onto a target
+//
 ractive.on('dropped', function (evt) {
-  console.log('dropped', evt.content);
-  var pin = evt.index.i,
-      sound = evt.content,
-      msg = { type: 'cap', action: 'add', value: pin, sound: sound };
-  socket.emit('ui', msg);
+  var target = evt.context.id,
+      action = evt.content,
+      msg = { name: 'associate', target: target, action: action };
+  socket.emit('command', msg);
 });
 
 function round(vals) {
   return vals.map ? vals.map(round) : Math.round(vals);
 }
 
-socket.on('sensor', function (msg) {
-  // console.log('msg', msg);
-  if (msg.type === 'rfid') {
-    ractive.set(msg.type, msg);
-  } else {
-    ractive.animate(msg.type, msg);
-  }
+//
+// Proxy incoming messages from socket to ractive
+//
+['actions', 'targets', 'assignments'].forEach(function (name) {
+  socket.on(name, function (msg) {
+    ractive.set(name, msg);
+  });
 });
