@@ -16,7 +16,7 @@ module.exports = React.createClass({
   actionList: function () {
     return this.props.actions.map(function (action) {
       return (
-        <span className="sound" x-decorator="draggable:{{.}}">{{ action }}</span>
+        <span key={action} className="sound" x-decorator="draggable:{{.}}">{{ action }}</span>
       );
     });
   },
