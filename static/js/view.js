@@ -19,7 +19,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="row">
-        <Targets targets={ this.props.targets }/>
+        <Targets onTargetDrop={ this.props.onTargetDrop } targets={ this.props.targets }/>
         <Actions actions={ this.props.actions }/>
       </div>
     );

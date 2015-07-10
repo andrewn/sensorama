@@ -11,7 +11,13 @@ var rootNode = document.querySelector('#ui'),
 //
 function renderWithData() {
   console.log('renderWithData', data);
-  React.render(<View {...data} />, rootNode);
+  React.render(<View {...data} onTargetDrop={targetDropHandler}/>, rootNode);
+}
+
+function targetDropHandler(evt) {
+  console.log('Target dropped', evt);
+  var msg = { name: 'associate', target: evt.target, action: evt.action };
+  socket.emit('command', msg);
 }
 
 //

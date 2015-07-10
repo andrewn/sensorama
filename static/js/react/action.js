@@ -12,6 +12,10 @@ module.exports = React.createClass({
         onmove : this.dragMoveListener,
         onend  : this.dragEndListener
       });
+
+    // 
+    this.getDOMNode()
+        .setAttribute('data-content', this.props.action);
   },
   componentWillUnmount: function() {
     interact(this.getDOMNode())
