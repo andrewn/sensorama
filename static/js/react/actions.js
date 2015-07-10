@@ -1,22 +1,12 @@
 var React = require('react');
 
+var ActionComponent = require('./action');
+
 module.exports = React.createClass({
-  // getInitialState: function() {
-  //   return { actions: [] };
-  // },
-  // tick: function() {
-  //   this.setState({secondsElapsed: this.state.secondsElapsed + 1});
-  // },
-  // componentDidMount: function() {
-  //   this.interval = setInterval(this.tick, 1000);
-  // },
-  // componentWillUnmount: function() {
-  //   clearInterval(this.interval);
-  // },
   actionList: function () {
     return this.props.actions.map(function (action) {
       return (
-        <span key={action} className="sound" x-decorator="draggable:{{.}}">{{ action }}</span>
+        <ActionComponent action={ action } />
       );
     });
   },
