@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react'),
+    _     = require('lodash');
 
 var View = require('./view');
 
@@ -10,7 +11,8 @@ var rootNode = document.querySelector('#ui'),
 // Render the react view
 //
 function renderWithData() {
-  React.render(<View {...data} onTargetDrop={targetDropHandler} onActionRemove={actionRemoveHandler}/>, rootNode);
+  var unassignedActions = _.difference( data.actions, _.values(data.assignments) );
+  React.render(<View {...data} actions={ unassignedActions } onTargetDrop={targetDropHandler} onActionRemove={actionRemoveHandler}/>, rootNode);
 }
 
 function targetDropHandler(evt) {
