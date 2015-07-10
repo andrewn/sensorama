@@ -13,7 +13,7 @@ module.exports = React.createClass({
         onend  : this.dragEndListener
       });
 
-    // 
+    //
     this.getDOMNode()
         .setAttribute('data-content', this.props.action);
   },
@@ -42,6 +42,16 @@ module.exports = React.createClass({
     });
   },
   dragEndListener: function (evt) {
+    var shouldFireEvent = true;
+
+    if (this.props.dragEndDistance && Math.abs(this.state.x) < this.props.dragEndDistance) {
+      shouldFireEvent = false;
+    }
+
+    if (this.props.onDragEnd && shouldFireEvent) {
+      this.props.onDragEnd(this.props);
+    }
+
     this.setState({
       x: 0,
       y: 0,

@@ -1,6 +1,8 @@
 var React    = require('react'),
     interact = require('interact.js');
 
+var Action = require('./action');
+
 module.exports = React.createClass({
   componentDidMount: function() {
     interact(this.getDOMNode())
@@ -26,7 +28,10 @@ module.exports = React.createClass({
         assignment  = '';
 
     if (this.props.assignment) {
-      assignment = <span className="sound">{ this.props.assignment }</span>;
+      assignment = <Action
+                    action={ this.props.assignment }
+                    dragEndDistance='100'
+                    onDragEnd={ this.props.onActionRemove.bind(null, this.props.assignment, this.props.id) } />;
     }
 
     return (
