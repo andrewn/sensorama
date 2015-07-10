@@ -1,54 +1,26 @@
-var Ractive = require('ractive'),
-    dragToDeleteEvent = require('./ractive/event/drag-to-delete'),
-    dropEvent = require('./ractive/event/drop'),
-    draggableDecorator = require('./ractive/decorator/draggable');
+var React = require('react');
 
-var socket = io();
+var View = require('./view');
 
-var ractive = new Ractive({
-  el: '#ui',
-  template: '#ui-template',
-  events: {
-    'drag': dragToDeleteEvent,
-    'drop': dropEvent
-  },
-  decorators: {
-    'draggable': draggableDecorator
-  },
-  data: {
-    round: round
-  }
-});
+var rootNode = document.querySelector('#ui'),
+    socket   = io(),
+    data     = { actions: [], targets: [] };
 
 //
-// When action is dragged away from
-// a target
+// Render the react view
 //
-ractive.on('remove', function (evt) {
-  var target = evt.context.id,
-      msg = { name: 'dissociate', target: target };
-  socket.emit('command', msg);
-});
-
-//
-// When action dropped onto a target
-//
-ractive.on('dropped', function (evt) {
-  var target = evt.context.id,
-      action = evt.content,
-      msg = { name: 'associate', target: target, action: action };
-  socket.emit('command', msg);
-});
-
-function round(vals) {
-  return vals.map ? vals.map(round) : Math.round(vals);
+function renderWithData() {
+  console.log('renderWithData', data);
+  React.render(<View {...data} />, rootNode);
 }
 
 //
-// Proxy incoming messages from socket to ractive
+// When incoming messages arrive, update the app
+// state and re-render the view
 //
 ['actions', 'targets', 'assignments'].forEach(function (name) {
   socket.on(name, function (msg) {
-    ractive.set(name, msg);
+    data[name] = msg;
+    renderWithData();
   });
 });

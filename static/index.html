@@ -7,35 +7,6 @@
 </head>
 <body data-page="editor" class="container">
   <div id="ui"></div>
-  <script id="ui-template" type="text/ractive">
-    <div class="row instructions">
-      <p class="column">Drag actions to assign to a sensor</p>
-    </div>
-    <div class="row">
-      <div class="one-half column">
-        <span class="label">Targets</span>
-        <div class="touches">
-          {{#targets}}
-          <span on-drop="dropped"
-                class="touch {{ (isActive === true)? 'is-touched' : '' }} {{ assignedSounds.sounds[i] ? 'is-assigned' : '' }}">
-            {{ name }}
-            {{#assignments[id]}}
-              <span on-drag="remove" class="sound">{{ assignments[id] }}</span>
-            {{/}}
-          </span>
-          {{/targets}}
-        </div>
-      </div>
-      <div class="one-half column">
-        <span class="label">Actions</span>
-        <div class="sounds">
-          {{#actions:i}}
-          <span class="sound" decorator="draggable:{{.}}">{{ . }}</span>
-          {{/actions}}
-        </div>
-      </div>
-    </div><!-- .u-row -->
-  </script>
   <script src="/js/bundle.js"></script>
 </body><!-- .container -->
 </html>

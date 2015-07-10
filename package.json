@@ -5,8 +5,8 @@
   "scripts": {
     "start": "PORT=5000 ./bin/app",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -t brfs static/js/app.js -o static/js/bundle.js",
-    "watch": "watchify -t brfs static/js/app.js -o static/js/bundle.js --debug --verbose",
+    "build": "browserify -t reactify -t brfs static/js/app.js -o static/js/bundle.js",
+    "watch": "watchify -t reactify -t brfs static/js/app.js -o static/js/bundle.js --debug --verbose",
     "watch-css": "watch 'css-combine static/css/app.css | autoprefixer -o static/css/bundle.css' static/css"
   },
   "author": "Andrew Nicolaou <andrew.nicolaou@bbc.co.uk>",
@@ -31,6 +31,8 @@
     "two.js": "~0.4.0",
     "d3": "~3.5.5",
     "debug": "~2.2.0",
-    "interact.js": "~1.2.4"
+    "interact.js": "~1.2.4",
+    "reactify": "~1.1.1",
+    "react": "~0.13.3"
   }
 }
