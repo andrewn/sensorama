@@ -4,7 +4,7 @@ var View = require('./view');
 
 var rootNode = document.querySelector('#ui'),
     socket   = io(),
-    data     = { actions: [], targets: [] };
+    data     = { actions: [], targets: [], assignments: {} };
 
 //
 // Render the react view

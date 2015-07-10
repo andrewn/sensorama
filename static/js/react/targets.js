@@ -16,10 +16,12 @@ module.exports = React.createClass({
   //   clearInterval(this.interval);
   // },
   list: function () {
-    var handler = this.props.onTargetDrop;
+    var handler = this.props.onTargetDrop,
+        assignments = this.props.assignments;
     return this.props.targets.map(function (t) {
+      var assignmentForTarget = assignments[t.id];
       return (
-        <Target key={ t.id } onTargetDrop={ handler } { ...t } />
+        <Target key={ t.id } onTargetDrop={ handler } assignment={ assignmentForTarget } { ...t } />
         // <span key={ t.id } className={ classes }>
         //   { t.name }
         // </span>
@@ -31,7 +33,7 @@ module.exports = React.createClass({
         //   {{/}}
         // </span>
       );
-    });
+    }.bind(this));
   },
   render: function() {
     return (

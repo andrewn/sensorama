@@ -22,10 +22,17 @@ module.exports = React.createClass({
   },
   render: function() {
     var activeClass = (this.props.isActive === true) ? 'is-touched' : '',
-        classes     = 'touch ' + activeClass;
+        classes     = 'touch ' + activeClass,
+        assignment  = '';
+
+    if (this.props.assignment) {
+      assignment = <span className="sound">{ this.props.assignment }</span>;
+    }
+
     return (
       <span className={ classes }>
         { this.props.name }
+        { assignment }
       </span>
     );
   }
