@@ -10,7 +10,6 @@ var rootNode = document.querySelector('#ui'),
 // Render the react view
 //
 function renderWithData() {
-  console.log('renderWithData', data);
   React.render(<View {...data} onTargetDrop={targetDropHandler}/>, rootNode);
 }
 
