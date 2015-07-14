@@ -105,14 +105,13 @@ function readlineParser(delimiter, encoding) {
 // systems over the serial port
 //
 function incoming(msg) {
-  console.log('Received message: ', msg);
   if (msg.name === 'reset') {
     resetCap();
   }
 }
 
 function pollAndEmit() {
-  debug({ type: 'msg', value: 'poll' });
+  debug({ type: 'msg', data: 'poll' });
 
   var touches;
 
@@ -126,7 +125,7 @@ function pollAndEmit() {
     debug('read touches');
     touches = sensors.cap.readTouches();
     if ( !isArraySame(state.lastTouches, touches) ) {
-      emit({ type: 'cap', unit: 'touched', pins: touches });
+      emit({ type: 'cap', unit: 'touched', data: touches });
       state.lastTouches = touches;
     }
     else {
@@ -136,14 +135,14 @@ function pollAndEmit() {
 
   // Gyro
   if (sensors.mpu) {
-    emit({ type: 'accel', unit: 'raw', xyz : sensors.mpu.getAcceleration() });
-    emit({ type: 'gyro', unit: 'deg', xyz : sensors.mpu.getDegreesPerSecond() });
+    emit({ type: 'accel', unit: 'raw', data : sensors.mpu.getAcceleration() });
+    emit({ type: 'gyro', unit: 'deg', data : sensors.mpu.getDegreesPerSecond() });
   }
 
   if (sensors.nfc) {
     sensors.nfc.findCards(function (card) {
       if (card) {
-        emit({ type: 'rfid', unit: 'id', value: card });
+        emit({ type: 'rfid', unit: 'id', data: card });
       }
     });
   }
@@ -189,7 +188,7 @@ function onInit() {
       /* trig */ pins.distance.trigger,
       /* echo */ pins.distance.echo,
       function(dist) {
-        emit({ type: 'distance', value: dist, unit: 'cm' });
+        emit({ type: 'distance', data: dist, unit: 'cm' });
       }
     );
   }
