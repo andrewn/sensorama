@@ -27,7 +27,7 @@ if (!port) {
 debug('Listen on port', port);
 
 var web = new Web(port),
-    router = new Router(player, web),
+    router,
     receiver;
 
 if (!rfidSerial) {
@@ -49,6 +49,11 @@ serialPromise
   .then(function (serialPort) {
     debug('Connecting receiver on port: ', serialPort);
     receiver = new Receiver(serialPort);
+
+    // Create a router, the interface between
+    // radiodan player, web UI and espruino
+    router = new Router(player, web, receiver);
+
     receiver.on('msg', function (msg) {
       debug('MESSAGE', msg);
 

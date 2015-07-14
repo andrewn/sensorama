@@ -12,7 +12,14 @@ var rootNode = document.querySelector('#ui'),
 //
 function renderWithData() {
   var unassignedActions = _.difference( data.actions, _.values(data.assignments) );
-  React.render(<View {...data} actions={ unassignedActions } onTargetDrop={targetDropHandler} onActionRemove={actionRemoveHandler}/>, rootNode);
+  React.render(
+    <View {...data}
+      actions={ unassignedActions }
+      onTargetDrop={targetDropHandler}
+      onActionRemove={actionRemoveHandler}
+      onResetRequest={resetButtonHandler}
+      />,
+    rootNode);
 }
 
 function targetDropHandler(evt) {
@@ -24,6 +31,12 @@ function targetDropHandler(evt) {
 function actionRemoveHandler(action, target) {
   console.log('Delete target dropped', action, target);
   var msg = { name: 'dissociate', target: target, action: action };
+  socket.emit('command', msg);
+}
+
+function resetButtonHandler() {
+  console.log('Reset requested');
+  var msg = { name: 'reset' };
   socket.emit('command', msg);
 }
 

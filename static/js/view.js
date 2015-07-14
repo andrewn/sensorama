@@ -14,6 +14,9 @@ module.exports = React.createClass({
           targets={ this.props.targets }
           assignments={ this.props.assignments }/>
         <Actions actions={ this.props.actions }/>
+        <button
+          className="reset button button-primary"
+          onClick={ this.props.onResetRequest }>Reset</button>
       </div>
     );
   }

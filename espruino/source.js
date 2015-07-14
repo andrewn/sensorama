@@ -1,5 +1,5 @@
 /* jshint strict: true */
-/* global B1, B15, A0, A1, A5, A6, A7, USB, SPI1, I2C1, LED2 */
+/* global B1, B15, A0, A1, USB, SPI3, I2C1, LED1, LED2 */
 'use strict';
 
 //
@@ -54,7 +54,7 @@ function debug(msg) {
   if (config.debug) { console.log(msg); }
 }
 
-function resetCap(pin, cb) {
+function triggerCapReset(pin, cb) {
   var delay = 100;
   pin.write(0);
   setTimeout(function () {
@@ -78,6 +78,37 @@ function isArraySame(ar1, ar2) {
   }
 
   return true;
+}
+
+// From: https://github.com/voodootikigod/node-serialport/blob/master/parsers.js#L11-L28
+// encoding: ascii utf8 utf16le ucs2 base64 binary hex
+// More: http://nodejs.org/api/buffer.html#buffer_buffer
+function readlineParser(delimiter, encoding) {
+  if (typeof delimiter === 'undefined' || delimiter === null) { delimiter = '\r'; }
+  if (typeof encoding  === 'undefined' || encoding  === null) { encoding  = 'utf8'; }
+  // Delimiter buffer saved in closure
+  var data = '';
+  return function (emitter, buffer) {
+    // Collect data
+    data += buffer.toString(encoding);
+    // Split collected data by delimiter
+    var parts = data.split(delimiter);
+    data = parts.pop();
+    parts.forEach(function (part) {
+      emitter.emit('data', part);
+    });
+  };
+}
+
+//
+// This function is called by external
+// systems over the serial port
+//
+function incoming(msg) {
+  console.log('Received message: ', msg);
+  if (msg.name === 'reset') {
+    resetCap();
+  }
 }
 
 function pollAndEmit() {
@@ -123,6 +154,18 @@ function pollAndEmit() {
 
 function startPolling() {
   setInterval(pollAndEmit, 500);
+}
+
+function resetCap() {
+  if (pins.cap.enabled) {
+    LED1.write(1);
+    triggerCapReset(pins.cap.reset, function () {
+      sensors.cap = require('CAP1188').connect(pins.I2C.instance);
+      sensors.cap.linkLedsToSensors();
+      debug('cap setup done');
+      LED1.write(0);
+    });
+  }
 }
 
 //
@@ -172,13 +215,7 @@ function onInit() {
   //
   // Capacitive breakout (CAP1188)
   //
-  if (pins.cap.enabled) {
-    resetCap(pins.cap.reset, function () {
-      sensors.cap = require('CAP1188').connect(pins.I2C.instance);
-      sensors.cap.linkLedsToSensors();
-      debug('cap setup done');
-    });
-  }
+  resetCap();
 
   // Start the main sensor polling loop
   startPolling();
