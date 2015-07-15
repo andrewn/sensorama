@@ -46,6 +46,7 @@ function resetButtonHandler() {
 //
 ['actions', 'targets', 'assignments'].forEach(function (name) {
   socket.on(name, function (msg) {
+    console.log('msg', name, msg);
     data[name] = msg;
     renderWithData();
   });
