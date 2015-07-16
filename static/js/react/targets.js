@@ -1,13 +1,15 @@
-var React = require('react');
+var React = require('react'),
+    _ = require('lodash');
 
 var Target = require('./target');
 
 module.exports = React.createClass({
-  list: function () {
+  list: function (targets) {
     var handler = this.props.onTargetDrop,
         actionHandler = this.props.onActionRemove,
         assignments = this.props.assignments;
-    return this.props.targets.map(function (t) {
+
+    return targets.map(function (t) {
       var assignmentForTarget = assignments[t.id];
       return (
         <Target
@@ -20,11 +22,21 @@ module.exports = React.createClass({
     }.bind(this));
   },
   render: function() {
+    var caps = _.filter(this.props.targets, { type: 'cap' }),
+        rfids = _.filter(this.props.targets, { type: 'rfid' });
+
     return (
       <div className="one-half column">
         <span className="label">Targets</span>
+
+          <h3 className="label">RFID sensors</h3>
+          <div className="sounds">
+            { this.list(rfids) }
+          </div>
+
+        <h3 className="label">Touch sensors</h3>
         <div className="sounds">
-          { this.list() }
+          { this.list(caps) }
         </div>
       </div>
     );
