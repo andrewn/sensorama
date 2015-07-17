@@ -139,12 +139,30 @@ function pollAndEmit() {
     emit({ type: 'gyro', unit: 'deg', data : sensors.mpu.getDegreesPerSecond() });
   }
 
-  if (sensors.nfc) {
-    sensors.nfc.findCards(function (card) {
-      if (card) {
-        emit({ type: 'rfid', unit: 'id', data: card });
+  function readRfid(nfc) {
+    var rfid1, rfid2;
+    nfc.isNewCard();
+    rfid1 = nfc.getCardSerial();
+    nfc.isNewCard();
+    rfid2 = nfc.getCardSerial();
+
+    if (rfid1.length === 0 && rfid2.length === 0) {
+      return [];
+    } else {
+      if (rfid1.length > 0) {
+        return rfid1;
+      } else if (rfid2.length > 0) {
+        return rfid2;
       }
-    });
+    }
+  }
+
+  if (sensors.nfc) {
+    var card = readRfid(sensors.nfc);
+    if ( !isArraySame(card, state.lastRfid) ) {
+      emit({ type: 'rfid', unit: 'id', data: card.length === 0 ? null : card });
+      state.lastRfid = card;
+    }
   }
 
   // Blink on-board LED
@@ -175,6 +193,7 @@ function onInit() {
   state.isOn = false;
   state.shouldEmit = false;
   state.lastTouches = [];
+  state.lastRfid = [];
 
   debug('Init');
 
