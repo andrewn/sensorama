@@ -16,7 +16,7 @@ module.exports = React.createClass({
         <Actions actions={ this.props.actions }/>
         <button
           className="reset button button-primary"
-          onClick={ this.props.onResetRequest }>Reset</button>
+          onClick={ this.props.onResetRequest }>Recalibrate</button>
       </div>
     );
   }
