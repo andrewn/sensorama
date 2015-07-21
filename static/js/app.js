@@ -7,6 +7,8 @@ var rootNode = document.querySelector('#ui'),
     socket   = io(),
     data     = { actions: [], targets: [], assignments: {} };
 
+window.data = data;
+
 //
 // Render the react view
 //

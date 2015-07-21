@@ -4,6 +4,9 @@ var React = require('react'),
 var Target = require('./target');
 
 module.exports = React.createClass({
+  targetsOfType: function (type) {
+    return _.filter(this.props.targets, { type: type });
+  },
   list: function (targets) {
     var handler = this.props.onTargetDrop,
         actionHandler = this.props.onActionRemove,
@@ -22,8 +25,8 @@ module.exports = React.createClass({
     }.bind(this));
   },
   render: function() {
-    var caps = _.filter(this.props.targets, { type: 'cap' }),
-        rfids = _.filter(this.props.targets, { type: 'rfid' });
+    var caps  = this.targetsOfType('cap'),
+        rfids = this.targetsOfType('rfid');
 
     return (
       <div className="one-half column">
