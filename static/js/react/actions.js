@@ -6,7 +6,7 @@ module.exports = React.createClass({
   actionList: function () {
     return this.props.actions.map(function (action) {
       return (
-        <ActionComponent action={ action } />
+        <ActionComponent key={ action.id } { ...action } />
       );
     });
   },

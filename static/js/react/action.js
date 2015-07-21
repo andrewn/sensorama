@@ -15,7 +15,7 @@ module.exports = React.createClass({
 
     //
     this.getDOMNode()
-        .setAttribute('data-content', this.props.action);
+        .setAttribute('data-content', this.props.id);
   },
   componentWillUnmount: function() {
     interact(this.getDOMNode())
@@ -59,8 +59,13 @@ module.exports = React.createClass({
     });
   },
   render: function() {
+    var image = this.props.image,
+        name  = this.props.name;
     return (
-      <span className="sound" style={ this.style() }>{ this.props.action }</span>
+      <span className="sound" style={ this.style() }>
+        <img src={ image } />
+        { name }
+      </span>
     );
   }
 });
