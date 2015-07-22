@@ -1,7 +1,7 @@
 var React = require('react'),
     _     = require('lodash');
 
-var View = require('./view');
+var View = require('./react/view');
 
 var rootNode = document.querySelector('#ui'),
     socket   = io(),

@@ -1,8 +1,8 @@
 var React = require('react');
 
-var Actions = require('./react/actions'),
-    Targets = require('./react/targets'),
-    Target  = require('./react/target');
+var Actions = require('./actions'),
+    Targets = require('./targets'),
+    Target  = require('./target');
 
 module.exports = React.createClass({
   render: function() {
