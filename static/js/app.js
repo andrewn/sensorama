@@ -9,14 +9,19 @@ var rootNode = document.querySelector('#ui'),
 
 window.data = data;
 
+function unassignedActions(actions, assignments) {
+  var assignmentIds = _.values(assignments),
+      unassignedActions = _.reject(actions, function (a) { return _.includes(assignmentIds, a.id); });
+  return unassignedActions;
+}
+
 //
 // Render the react view
 //
 function renderWithData() {
-  var unassignedActions = _.difference( data.actions, _.values(data.assignments) );
   React.render(
     <View {...data}
-      actions={ unassignedActions }
+      actions={ unassignedActions(data.actions, data.assignments) }
       onTargetDrop={targetDropHandler}
       onActionRemove={actionRemoveHandler}
       onResetRequest={resetButtonHandler}
