@@ -23,8 +23,8 @@ module.exports = React.createClass({
     this.props.onTargetDrop(evt);
   },
   render: function() {
-    var activeClass = (this.props.isActive === true) ? 'is-touched' : '',
-        classes     = 'touch ' + activeClass,
+    var activeClass = (this.props.isActive === true) ? ' is-active ' : '',
+        classes     = 'target' + activeClass,
         targetName  = this.props.type === 'rfid' ? '' : this.props.name,
         assignment  = '';
 

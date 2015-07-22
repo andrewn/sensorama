@@ -14,8 +14,8 @@ module.exports = React.createClass({
     var numActions = this.props.actions.length;
     return (
       <div className="one-half column">
-        <span className="label">Actions ({ numActions })</span>
-        <div className="sounds">
+        <h2>Actions ({ numActions })</h2>
+        <div className="actions">
           { this.actionList() }
         </div>
       </div>

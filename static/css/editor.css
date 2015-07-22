@@ -5,15 +5,24 @@
   font-size: 3rem;
 }
 
+/*
+  1024 × 768
+  2048 × 1536
+*/
+[data-page='editor'].container {
+  width: 1024px;
+  margin: 16px;
+}
+
 [data-page='editor'] .instructions {
   font-size: 2rem;
 }
 
-[data-page='editor'] .touches {
+[data-page='editor'] .targets {
   width: 50vw;
 }
 
-[data-page='editor'] .touch {
+[data-page='editor'] .target {
   position: relative;
   display: inline-block;
   width: 10vw;
@@ -23,12 +32,13 @@
 
   margin: 1vw 9vw 1vw 1vw;
 
-  border: 4px solid hsl(175, 91%, 50%);
+  color: rgb(34, 34, 34);
+  background: hsl(175, 91%, 50%);
   border-radius: 10vw;
 }
 
-[data-page='editor'] .touch.is-touched {
-  border-color: #ff0;
+[data-page='editor'] .target.is-active {
+  background: #ff0;
 }
 
 /*
@@ -37,7 +47,7 @@
   color: #222;
 }
 */
-[data-page='editor'] .touch .sound {
+[data-page='editor'] .target .action {
   display: inline-block;
   position: absolute;
   bottom: 0;
@@ -49,21 +59,25 @@
   font-size: 2rem;
 }
 
-[data-page='editor'] .touch.is-assigned,
-[data-page='editor'] .touch.is-assigned .sound {
+[data-page='editor'] .target.is-assigned,
+[data-page='editor'] .target.is-assigned .action {
   background-color: hsl(175, 91%, 50%);
   color: #222;
 }
 
 
-[data-page='editor'] .sound {
+[data-page='editor'] .action {
   display: inline-block;
   padding: 1rem;
-  background: rgba(34, 34, 34, 0.8);
-  border: 1px solid hsl(175, 91%, 50%);
 }
 
-[data-page='editor'] .sounds .sound {
-  display: block;
-  margin: 1rem 0;
+[data-page='editor'] .action.has-label {
+  /*background: rgba(34, 34, 34, 0.8);*/
+  color: rgb(34, 34, 34);
+  background: hsl(175, 91%, 50%);
+}
+
+
+[data-page='editor'] .actions .action {
+  margin: 1rem;
 }

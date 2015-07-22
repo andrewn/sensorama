@@ -30,15 +30,15 @@ module.exports = React.createClass({
 
     return (
       <div className="one-half column">
-        <span className="label">Targets</span>
+        <h2>Targets</h2>
 
           <h3 className="label">RFID sensors</h3>
-          <div className="sounds">
+          <div className="targets">
             { this.list(rfids) }
           </div>
 
         <h3 className="label">Touch sensors</h3>
-        <div className="sounds">
+        <div className="targets">
           { this.list(caps) }
         </div>
       </div>
