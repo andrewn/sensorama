@@ -25,6 +25,7 @@ module.exports = React.createClass({
   render: function() {
     var activeClass = (this.props.isActive === true) ? 'is-touched' : '',
         classes     = 'touch ' + activeClass,
+        targetName  = this.props.type === 'rfid' ? '' : this.props.name,
         assignment  = '';
 
     if (this.props.assignment) {
@@ -36,7 +37,7 @@ module.exports = React.createClass({
 
     return (
       <span className={ classes }>
-        { this.props.name }
+        { targetName }
         { assignment }
       </span>
     );
