@@ -25,6 +25,7 @@ function renderWithData() {
       onTargetDrop={targetDropHandler}
       onActionRemove={actionRemoveHandler}
       onResetRequest={resetButtonHandler}
+      onClearAssignmentsRequest={clearAssignmentsButtonHandler}
       />,
     rootNode);
 }
@@ -45,6 +46,13 @@ function resetButtonHandler() {
   console.log('Reset requested');
   var msg = { name: 'reset' };
   socket.emit('command', msg);
+}
+
+function clearAssignmentsButtonHandler() {
+  console.log('Clear assignments');
+  _.forEach(data.assignments, function (action, target) {
+    socket.emit('command', { name: 'dissociate', target: target, action: action });
+  });
 }
 
 //
