@@ -73,6 +73,9 @@ function isArraySame(ar1, ar2) {
 function incoming(msg) {
   if (msg.name === 'reset') {
     resetCap();
+  } else if (msg.name === 'state'){
+    emit({ type: 'cap',  unit: 'touched', data: state.lastTouches });
+    emit({ type: 'rfid', unit: 'id', data: state.lastRfid.length === 0 ? null : state.lastRfid });
   }
 }
 
