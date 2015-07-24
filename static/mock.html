@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/css/bundle.css">
+  <style type="text/css">
+    .col {
+      float: left;
+      width: 49%;
+    }
+    h2 {
+      width: 2em;
+    }
+    h2,
+    label {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+    input {
+      vertical-align: middle;
+      visibility: hidden;
+      position: absolute;
+    }
+    label {
+      width: 10vw;
+      height: 10vw;
+      line-height: 10vw;
+      border: 1px solid #eee;
+      border-radius: 100vw;
+      vertical-align: middle;
+      text-align: center;
+    }
+    label.checked {
+      background: rgba(255, 255, 0, 0.6);
+    }
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <title>Mock Espruino</title>
+</head>
+<body data-page="editor" class="container">
+  <div id="ui"></div>
+
+
+  <script>
+    var socket = io(),
+        el = document.getElementById('ui');
+
+    createUi();
+
+    function sendState() {
+      sendCapState();
+      sendRfidState();
+    }
+
+    function sendCapState() {
+      var inputs = el.querySelectorAll('input[name=cap]');
+      var data = map(inputs, function (input) {
+        return input.checked;
+      });
+      var states = { type: 'cap', data: data };
+      socket.emit('command', states);
+    }
+
+    function sendRfidState() {
+      var input = el.querySelector('input[name=rfid]:checked');
+      var data = (input.value == 'none') ? null : input.value;
+      var state = { type: 'rfid', data: data };
+      socket.emit('command', state);
+    }
+
+    function syncUi() {
+      var labels = el.querySelectorAll('label');
+      forEach(labels, function (label) {
+        var input = label.querySelector('input');
+        label.className = input.checked ? 'checked' : '';
+      });
+    }
+
+    function createUi() {
+      // Rfid
+      el.innerHTML += '<br /><h2>RFID</h2>\n';
+      el.innerHTML += ['abc123', 'def456', 'ghi789', 'none'].map(function (item) {
+        return '  <label><input type="radio" name="rfid" value="' + item + '" checked /> ' + item + '</label>';
+      }).join('\n');
+
+      // Cap
+      el.innerHTML += '<br /><h2>Cap</h2>\n';
+      el.innerHTML += [0, 1, 2, 3, 4, 5, 6, 7].map(function (item) {
+        return '  <label><input type="checkbox" name="cap" value="' + item + '" /> ' + item + '</label>';
+      }).join('\n');
+
+      forEach(
+        el.querySelectorAll('input'),
+        function (input) {
+          input.addEventListener('change', function () {
+            syncUi();
+            sendState();
+          });
+        }
+      );
+
+      syncUi();
+    }
+
+    function forEach(collection, fn) {
+      return Array.prototype.forEach.call(collection, fn);
+    }
+
+    function map(collection, fn) {
+      return Array.prototype.map.call(collection, fn);
+    }
+  </script>
+</body><!-- .container -->
+</html>

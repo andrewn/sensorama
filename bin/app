@@ -10,18 +10,25 @@ var debug = require('debug')('sensors:app'),
 
 var Espruino = require('../lib/espruino'),
     Receiver = require('../lib/receiver'),
+    ReceiverMock = require('../lib/receiver-mock'),
     rfidReader = require('../lib/rfid'),
     Router   = require('../lib/router'),
     Web      = require('../lib/web');
 
 var serialNum    = process.env.ESPRUINO_SERIAL_NUM,
     rfidSerial   = process.env.RFID_SERIAL_PORT,
+    mockEspruinoPort = process.env.MOCK_ESPRUINO,
     port = process.env.PORT,
     player = radiodan.player.get('main');
 
 if (!port) {
   log('Set PORT variable');
   process.exit(1);
+}
+
+if (mockEspruinoPort) {
+  findAvailableEspruino = function () { return Promise.resolve(mockEspruinoPort); };
+  Receiver = ReceiverMock;
 }
 
 debug('Listen on port', port);
