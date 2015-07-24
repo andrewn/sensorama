@@ -63,7 +63,7 @@ module.exports = React.createClass({
         labelClass = hasImage ? '' : ' has-label ',
         className  = "action" + labelClass,
         image = this.props.image ? <img src={ this.props.image } /> : '',
-        iconName = 'fa fa-' + this.props.icon,
+        iconName = 'icon fa fa-' + this.props.icon,
         icon  = this.props.icon ? <i className={ iconName }></i> : '',
         name  = hasImage ? null : this.props.name;
     return (
