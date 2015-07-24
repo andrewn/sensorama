@@ -38067,8 +38067,6 @@ process.umask = function() { return 0; };
 },{}],159:[function(require,module,exports){
 'use strict';
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var React = require('react'),
     _ = require('lodash');
 
@@ -38079,6 +38077,14 @@ var rootNode = document.querySelector('#ui'),
     data = { actions: [], targets: [], assignments: {} };
 
 window.data = data;
+
+function assignmentObjectsById(actions, assignments) {
+  var obj = {};
+  _.forEach(assignments, function (value, key) {
+    obj[key] = _.find(actions, { id: value });
+  });
+  return obj;
+}
 
 function unassignedActions(actions, assignments) {
   var assignmentIds = _.values(assignments),
@@ -38092,13 +38098,15 @@ function unassignedActions(actions, assignments) {
 // Render the react view
 //
 function renderWithData() {
-  React.render(React.createElement(View, _extends({}, data, {
+  React.render(React.createElement(View, {
+    assignments: assignmentObjectsById(data.actions, data.assignments),
+    targets: data.targets,
     actions: unassignedActions(data.actions, data.assignments),
     onTargetDrop: targetDropHandler,
     onActionRemove: actionRemoveHandler,
     onResetRequest: resetButtonHandler,
     onClearAssignmentsRequest: clearAssignmentsButtonHandler
-  })), rootNode);
+  }), rootNode);
 }
 
 function targetDropHandler(evt) {
@@ -38259,6 +38267,8 @@ module.exports = React.createClass({
 },{"./action":160,"react":157}],162:[function(require,module,exports){
 'use strict';
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var React = require('react'),
     interact = require('interact.js');
 
@@ -38290,10 +38300,9 @@ module.exports = React.createClass({
         assignment = '';
 
     if (this.props.assignment) {
-      assignment = React.createElement(Action, {
-        name: this.props.assignment,
+      assignment = React.createElement(Action, _extends({}, this.props.assignment, {
         dragEndDistance: '100',
-        onDragEnd: this.props.onActionRemove.bind(null, this.props.assignment, this.props.id) });
+        onDragEnd: this.props.onActionRemove.bind(null, this.props.assignment, this.props.id) }));
     }
 
     return React.createElement(

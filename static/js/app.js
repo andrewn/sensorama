@@ -9,6 +9,14 @@ var rootNode = document.querySelector('#ui'),
 
 window.data = data;
 
+function assignmentObjectsById(actions, assignments) {
+  var obj = {};
+  _.forEach(assignments, function (value, key) {
+    obj[key] = _.find(actions, { id: value });
+  });
+  return obj;
+}
+
 function unassignedActions(actions, assignments) {
   var assignmentIds = _.values(assignments),
       unassignedActions = _.reject(actions, function (a) { return _.includes(assignmentIds, a.id); });
@@ -20,7 +28,9 @@ function unassignedActions(actions, assignments) {
 //
 function renderWithData() {
   React.render(
-    <View {...data}
+    <View
+      assignments={ assignmentObjectsById(data.actions, data.assignments) }
+      targets={ data.targets }
       actions={ unassignedActions(data.actions, data.assignments) }
       onTargetDrop={targetDropHandler}
       onActionRemove={actionRemoveHandler}

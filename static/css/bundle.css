@@ -2075,6 +2075,8 @@ there.
 [data-page='editor'] .target.is-assigned .action {
   background-color: hsl(175, 91%, 50%);
   color: #222;
+}[data-page='editor'] .target .action {
+  width: 150%;
 }[data-page='editor'] .action {
   display: inline-block;
   padding: 1rem;

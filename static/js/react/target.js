@@ -30,7 +30,7 @@ module.exports = React.createClass({
 
     if (this.props.assignment) {
       assignment = <Action
-                    name={ this.props.assignment }
+                    { ...this.props.assignment }
                     dragEndDistance='100'
                     onDragEnd={ this.props.onActionRemove.bind(null, this.props.assignment, this.props.id) } />;
     }

@@ -65,6 +65,9 @@
   color: #222;
 }
 
+[data-page='editor'] .target .action {
+  width: 150%;
+}
 
 [data-page='editor'] .action {
   display: inline-block;
