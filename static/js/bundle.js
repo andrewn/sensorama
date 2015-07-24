@@ -38298,7 +38298,7 @@ module.exports = React.createClass({
 
     return React.createElement(
       'span',
-      { className: classes },
+      { className: classes, title: this.props.name },
       targetName,
       assignment
     );

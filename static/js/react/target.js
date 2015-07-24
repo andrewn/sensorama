@@ -36,7 +36,7 @@ module.exports = React.createClass({
     }
 
     return (
-      <span className={ classes }>
+      <span className={ classes } title={ this.props.name }>
         { targetName }
         { assignment }
       </span>
