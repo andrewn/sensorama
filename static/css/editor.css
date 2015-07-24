@@ -33,7 +33,7 @@
   margin: 1vw 9vw 1vw 1vw;
 
   color: rgb(34, 34, 34);
-  background: hsl(175, 91%, 50%);
+  background: hsla(339, 100%, 35%, 1);
   border-radius: 10vw;
 }
 
@@ -59,9 +59,12 @@
   font-size: 2rem;
 }
 
+/*
+  Change colour on activation
+*/
 [data-page='editor'] .target.is-assigned,
 [data-page='editor'] .target.is-assigned .action {
-  background-color: hsl(175, 91%, 50%);
+  background-color: hsla(125, 100%, 73%, 1);
   color: #222;
 }
 
@@ -75,11 +78,31 @@
 }
 
 [data-page='editor'] .action.has-label {
-  /*background: rgba(34, 34, 34, 0.8);*/
   color: rgb(34, 34, 34);
-  background: hsl(175, 91%, 50%);
+  background: hsla(339, 100%, 35%, 1);
 }
 
+/*
+  Cyan:   hsla(223, 100%, 50%, 1)
+  Pink:   hsla(339, 100%, 35%, 1)
+  Orange: hsla(43 , 100%, 63%, 1)
+  Yellow: hsla(125, 100%, 73%, 1)
+*/
+[data-page='editor'] .action[data-type='command'] {
+  background: hsla(223, 70%, 50%, 1);
+}
+
+[data-page='editor'] .action[data-type='command']:active {
+  background: hsla(223, 100%, 60%, 1);
+}
+
+[data-page='editor'] .action[data-type='media'] {
+  background: hsla(43 , 70%, 63%, 1);
+}
+
+[data-page='editor'] .action[data-type='media']:active {
+  background: hsla(43 , 100%, 73%, 1);
+}
 
 [data-page='editor'] .actions .action {
   margin: 1rem;

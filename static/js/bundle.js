@@ -38218,7 +38218,7 @@ module.exports = React.createClass({
         name = hasImage ? null : this.props.name;
     return React.createElement(
       'span',
-      { className: className, style: this.style() },
+      { 'data-type': this.props.type, className: className, style: this.style() },
       image,
       icon,
       name
