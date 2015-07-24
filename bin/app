@@ -61,6 +61,7 @@ serialPromise
     // radiodan player, web UI and espruino
     router = new Router(player, web, receiver);
 
+    // TODO: Move into router
     receiver.on('targets', function (targets) {
       debug('TARGETS', targets);
       router.updateTargetStates(targets);
