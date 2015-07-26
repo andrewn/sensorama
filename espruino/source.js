@@ -80,7 +80,7 @@ function incoming(msg) {
 }
 
 function pollAndEmit() {
-  debug({ type: 'msg', data: 'poll' });
+  emit({ type: 'msg', data: 'heartbeat' });
 
   var touches;
 
