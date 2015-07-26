@@ -200,8 +200,10 @@ function onInit() {
   //
   // Capacitive breakout (CAP1188)
   //
-  sensors.cap = require('CAP1188').connect(pins.I2C.instance, { resetPin: pins.cap.reset });
-  sensors.cap.reset();
+  if (pins.cap.enabled) {
+    sensors.cap = require('CAP1188').connect(pins.I2C.instance, { resetPin: pins.cap.reset });
+    sensors.cap.reset();
+  }
 
   // Start the main sensor polling loop
   startPolling();
