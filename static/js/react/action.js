@@ -1,4 +1,5 @@
 var React    = require('react'),
+    prefix   = require('react-prefixr'),
     interact = require('interact.js');
 
 module.exports = React.createClass({
@@ -28,7 +29,7 @@ module.exports = React.createClass({
     if (this.state.duration) {
       style.transitionDuration = this.state.duration;
     }
-    return style;
+    return prefix(style);
   },
   dragStartListener: function (evt) {
     this.setState({
